@@ -21,19 +21,16 @@ enum SS_flags {
 class Drive {
   private:
   // Initialize PID Values
-  const float pidConstants[9][7] = {
+  const float pidConstants[6][7] = {
   /*{kP, kPt, kI, kIt, kD,  kDt,  kPd}*/
-    {27,  93,  0,  94, 96,  348,  146},  //80-125  gen lat
-    {0,   57,  0,  31,  0,   99,  0  },  //140-150 long lat
-    {27,  157, 0,  47, 96,  356, 146 },  //30-40   gen lat
-    {28, 105, 20,  51, 180, 203, 123 },  //50     short lat <=12
+    {0,  115,  0,  0, 0,    0,    0},  //General PID
+ 
+    {0,  0,  0,   0,   0, 0,  0}, //45 degree and under short lat
 
-    {0,  54,  0,  30,  0,  107,    0},  //180
+    {0,  0,  0,   0,   0, 0,  0},// 100 deg plus long lat
 
-    {0,  0,   0,  0,  0,   0,    0},    //307
-
+ 
     {25, 69,  0,  0,  44,  58, 0},  //meduim swerve
-
     {50, 71,   0,  0,  68,  0,    0},  //goal swerves (skills)
    
   };
@@ -56,8 +53,10 @@ class Drive {
 
   float maxStepDistance = 2;
   float maxStepTurn = 0.2;
+
   float SSMaxCount = 10;
-  float SSMaxCount_t = 10;
+  float SSMaxCount_t = 9;
+
   bool SSActive = true;
   bool SSActive_t = true;
 

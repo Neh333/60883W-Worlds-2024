@@ -6,32 +6,36 @@
 Drive drive; //object instance of PID named drive 
 
 void close(){    
-  imu.set_heading(25);
-  wingPis.set_value(true);
-  intakePis.set_value(true);
-  drive.setPID(4);
-
-  drive.move(backward, 14, 1, 70);
-  drive.move(right, imuTarget(90), 1, 70);
-
-  wingPis.set_value(false);
-  
-  drive.setPID(4);
-  drive.move(left, imuTarget(40), 1, 70);
-
-  drive.setPID(4);
-  drive.move(forward, 10, 1, 70);
-  
-  drive.setPID(3);
-  drive.move(left, imuTarget(357), 1, 70);
-
-  drive.move(forward, 32, 1, 100);
-
-  intakePis.set_value(false);
+  drive.move(right, 50, 1, 70);
   pros::delay(1000);
-  moveDriveVoltage(2000);
+ 
+  drive.move(right, 60, 1, 70);
+  pros::delay(1000);
 
+  drive.move(right, 75, 1, 70);
+  pros::delay(1000);
 
+  drive.move(right, 90, 1, 70);
+  pros::delay(1000);
+
+ /*
+  drive.move(right, 105, 2, 70);
+  pros::delay(1000);
+
+  drive.move(right, 130, 2, 70);
+  pros::delay(1000);
+
+  drive.move(right, 145, 2, 70);
+  pros::delay(1000);
+
+  drive.move(right, 160, 2, 70);
+  pros::delay(1000);
+
+  drive.move(right, 180, 2, 70);
+  pros::delay(1000);
+ */
+ 
+ 
 }
 
 void far(){

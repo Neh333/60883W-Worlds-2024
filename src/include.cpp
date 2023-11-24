@@ -19,7 +19,7 @@ pros::Motor puncher(5, false);
 pros::Motor intake(7, true);
 
 //Define V5 sensorss
-pros::Imu imu(6);
+pros::Imu imu(17);
 
 pros::Rotation puncherR(3);
 pros::Vision vison(14);
