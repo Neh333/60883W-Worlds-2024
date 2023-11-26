@@ -22,17 +22,15 @@ enum SS_flags {
 class Drive {
   private:
   // Initialize PID Values
-  const float pidConstants[7][7] = {
+  const float pidConstants[6][7] = {
   /*{kP, kPt, kI, kIt, kD,  kDt, kPd}*/
     {0,  118,  0, 82,  0,   555,   0}, //90 - 240 / gen lat
-
     {0,  185,  0, 51,   0,  732,   0}, //30 - 85 / short lat
 
-    {0,  0,  0,   0,   0, 0,  0}, //245+  / long lat? gen lat?
-    {25, 69,  0,  0,  44,  58, 0},  //small swerves
-    {25, 69,  0,  0,  44,  58, 0},  //aggresive  swerves (far side)
-    {25, 69,  0,  0,  44,  58, 0},  //meduim swerve
-    {50, 71,   0,  0,  68,  0, 0},  //goal swerves (skills)
+    {0,   0,  0,  0,    0,  0, 0},  //small swerves
+    {0,   0,  0,  0,    0,  0, 0},  //aggresive swerve (far side)
+    {0,   0,  0,  0,    0,  0, 0},  //meduim swerve
+    {0,   0,  0,  0,    0,  0, 0},  //goal swerves (skills)
    
   };
 

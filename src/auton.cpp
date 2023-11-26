@@ -13,23 +13,24 @@ Drive drive; //object instance of PID named drive
 */
 
 void close(){   
-  drive.setPID(2);
+  drive.setPID(3);
 
-  drive.move(right, 30, 1, 70);
+  drive.move(right, 245, 1, 70);
   pros::delay(1000);
  
-  drive.move(right, 45, 1, 70);
+  drive.move(right, 260, 1, 70);
   pros::delay(1000);
 
-  drive.move(right, 60, 1, 70);
+  drive.move(right, 275, 1, 70);
   pros::delay(1000);
 
-  drive.move(right, 75, 2, 70);
+  drive.move(right, 290, 2, 70);
   pros::delay(1000);
 
-  drive.move(right, 85, 2, 70);
+  drive.move(right, 300, 2, 70);
   pros::delay(1000);
-  
+
+
 }
 
 void far(){
@@ -84,7 +85,7 @@ void far(){
                   /*{kP,kPt,kI,kIt,kD,kDt,kPd, }*/
  /*
  drive.setCustomPID(0, 64, 0,  2, 0,  6, 0);
- drive.move(left, imuTarget(250), 2, 100); //307 degree turn
+ drive.move(right, imuTarget(250), 2, 100); //193 degree turn
  intake.move_voltage(0);
 
  drive.setPID(2);
