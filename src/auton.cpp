@@ -5,31 +5,31 @@
 #include "PID.hpp"
 Drive drive; //object instance of PID named drive 
 
+/* AUTON NOTES 
+*  run turn velo 70 or lower
+*  run gen lat 100
+*  run short lat 80 or lower
+*  make sure movment has a big enough timeout 
+*/
+
 void close(){   
-
-
-
-  drive.move(right, 180, 1, 70);
-  pros::delay(1000);
-
-  
-  /*
   drive.setPID(2);
 
-  drive.move(right, 25, 1, 70);
+  drive.move(right, 30, 1, 70);
   pros::delay(1000);
  
-  drive.move(right, 35, 1, 70);
+  drive.move(right, 45, 1, 70);
   pros::delay(1000);
 
-  drive.move(right, 50, 1, 70);
+  drive.move(right, 60, 1, 70);
   pros::delay(1000);
 
-  drive.move(right, 65, 2, 70);
+  drive.move(right, 75, 2, 70);
   pros::delay(1000);
- */
+
+  drive.move(right, 85, 2, 70);
+  pros::delay(1000);
   
- 
 }
 
 void far(){
@@ -51,7 +51,7 @@ void far(){
 
  drive.move(forward, 14, 1, 100);
 
-/*
+ /*
  drive.setPID(3);
  drive.move(left, imuTarget(90), 1, 100);
 
@@ -82,7 +82,7 @@ void far(){
  */
                  
                   /*{kP,kPt,kI,kIt,kD,kDt,kPd, }*/
-/*
+ /*
  drive.setCustomPID(0, 64, 0,  2, 0,  6, 0);
  drive.move(left, imuTarget(250), 2, 100); //307 degree turn
  intake.move_voltage(0);
@@ -97,8 +97,11 @@ void far(){
  */
 
 }
-void closeNP(){}
-void farNP(){
+
+void closeBarTouch(){}
+
+void HighClose(){}
+void HighFar(){
  intakePis.set_value(true);
  intake.move_voltage(-12000);
  
@@ -184,6 +187,9 @@ void farNP(){
  drive.move(backward, 24, 1, 100);
 
 }
+
+void closeRush(){}
+void farRush(){}
 
 void skills(){
  //sec1

@@ -24,11 +24,11 @@ class Drive {
   // Initialize PID Values
   const float pidConstants[7][7] = {
   /*{kP, kPt, kI, kIt, kD,  kDt,  kPd}*/
-    {0,  114,  0, 82,  0,   555,    0}, //90 - 240
+    {0,  118,  0, 82,  0,   555,    0}, //90 - 240 / gen lat
  
-    {0,  170,  0,   0,   0, 550,  0}, //25 - 85 
+    {0,  171,  0, 0,   0,   0,  0}, //30 - 85 / short lat
 
-    {0,  0,  0,   0,   0, 0,  0}, //245+
+    {0,  0,  0,   0,   0, 0,  0}, //245+  / long lat? gen lat?
 
     
     {25, 69,  0,  0,  44,  58, 0},  //small swerves

@@ -3,19 +3,22 @@
 #include "include.hpp"
 #include "lvgl_funcs.hpp"
 
-#define AUTO_NUMBER 6
+#define AUTO_NUMBER 9
 
 //Global Variable Declaration
 uint8_t auton = AUTO_NUMBER; 
 
 #define AUTO_SWITCH(){ \
 	switch(auton%AUTO_NUMBER){\
-		case 0: controller.print(2, 0, "Close  %.2f                   ",imu.get_heading()); break;\
-		case 1: controller.print(2, 0, "Far %.2f                      ",imu.get_heading()); break;\
-		case 2: controller.print(2, 0, "Close No Pole %.2f            ",imu.get_heading()); break;\
-		case 3: controller.print(2, 0, "Far No Pole %.2f              ",imu.get_heading()); break;\
-		case 4: controller.print(2, 0, "Skills %.2f                   ",imu.get_heading()); break;\
-		case 5: controller.print(2, 0, "Nothing %.2f                  ",imu.get_heading()); break;\
+		case 0: controller.print(2, 0, "Close  %.2f                       ",imu.get_heading()); break;\
+		case 1: controller.print(2, 0, "Far %.2f                          ",imu.get_heading()); break;\
+		case 2: controller.print(2, 0, "Close Bar Touch %.2f              ",imu.get_heading()); break;\
+		case 3: controller.print(2, 0, "Close High %.2f                   ",imu.get_heading()); break;\
+		case 4: controller.print(2, 0, "Far High %.2f                     ",imu.get_heading()); break;\
+		case 5: controller.print(2, 0, "Close Rush %.2f                   ",imu.get_heading()); break;\
+		case 6: controller.print(2, 0, "Far Rush  %.2f                    ",imu.get_heading()); break;\
+		case 7: controller.print(2, 0, "Skills %.2f                       ",imu.get_heading()); break;\
+		case 8: controller.print(2, 0, "Nothing %.2f                      ",imu.get_heading()); break;\
 	}\
 }
 
@@ -53,13 +56,22 @@ void competition_initialize(){
 
 
 void autonomous(){
+
+	/*TO DO:
+	* make sure auto displayed goes with the auto ran
+	*
+	*/
+
 	switch(auton%AUTO_NUMBER){
-		case 0: close();	break;
-		case 1: far();      break;
-		case 2: closeNP();  break;
-		case 3: farNP();    break;
-		case 4: skills();   break;
-		case 5: nothing();  break;
+		case 0: close();	     break;
+		case 1: far();           break;
+		case 2: closeBarTouch(); break;
+		case 3: HighClose();     break;
+		case 4: HighFar();       break;
+		case 5: closeRush();     break;
+		case 6: farRush();       break;
+		case 7: skills();        break;
+		case 8: nothing();       break;
 	}
 }
 

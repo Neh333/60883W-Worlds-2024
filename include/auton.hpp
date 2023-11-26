@@ -1,7 +1,14 @@
 #pragma once
 void close();
 void far();
-void closeNP();
-void farNP();
+
+void closeBarTouch();
+
+void HighClose();
+void HighFar();
+
+void closeRush();
+void farRush();
+
 void skills();
 void nothing();
