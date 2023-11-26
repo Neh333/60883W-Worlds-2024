@@ -5,36 +5,30 @@
 #include "PID.hpp"
 Drive drive; //object instance of PID named drive 
 
-void close(){    
+void close(){   
+
+
+
+  drive.move(right, 180, 1, 70);
+  pros::delay(1000);
+
+  
+  /*
+  drive.setPID(2);
+
+  drive.move(right, 25, 1, 70);
+  pros::delay(1000);
+ 
+  drive.move(right, 35, 1, 70);
+  pros::delay(1000);
+
   drive.move(right, 50, 1, 70);
   pros::delay(1000);
- 
-  drive.move(right, 60, 1, 70);
-  pros::delay(1000);
 
-  drive.move(right, 75, 1, 70);
-  pros::delay(1000);
-
-  drive.move(right, 90, 1, 70);
-  pros::delay(1000);
-
- /*
-  drive.move(right, 105, 2, 70);
-  pros::delay(1000);
-
-  drive.move(right, 130, 2, 70);
-  pros::delay(1000);
-
-  drive.move(right, 145, 2, 70);
-  pros::delay(1000);
-
-  drive.move(right, 160, 2, 70);
-  pros::delay(1000);
-
-  drive.move(right, 180, 2, 70);
+  drive.move(right, 65, 2, 70);
   pros::delay(1000);
  */
- 
+  
  
 }
 

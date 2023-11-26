@@ -203,7 +203,7 @@ float Drive::move(PID_dir dir, float target, float timeOut, float maxVelocity) {
   else if (dir == right || dir == left) {
     // Turn specific variables
     const float initialAngle = rotationValue() + 360;
-    const float integralActive_t = 2.2;
+    const float integralActive_t = 4;
 
     // Begin PID
     while ((pros::millis() < endTime && !standStill)) {

@@ -1,5 +1,6 @@
 #include "funcs.hpp"
-#define integralMax 100.0f
+#define integralMax 41.0f
+
 // Direction enumeration
 enum PID_dir {
   forward,
@@ -21,17 +22,19 @@ enum SS_flags {
 class Drive {
   private:
   // Initialize PID Values
-  const float pidConstants[6][7] = {
+  const float pidConstants[7][7] = {
   /*{kP, kPt, kI, kIt, kD,  kDt,  kPd}*/
-    {0,  115,  0,  0, 0,    0,    0},  //General PID
+    {0,  114,  0, 82,  0,   555,    0}, //90 - 240
  
-    {0,  0,  0,   0,   0, 0,  0}, //45 degree and under short lat
+    {0,  170,  0,   0,   0, 550,  0}, //25 - 85 
 
-    {0,  0,  0,   0,   0, 0,  0},// 100 deg plus long lat
+    {0,  0,  0,   0,   0, 0,  0}, //245+
 
- 
+    
+    {25, 69,  0,  0,  44,  58, 0},  //small swerves
+    {25, 69,  0,  0,  44,  58, 0},  //aggresive  swerves (far side)
     {25, 69,  0,  0,  44,  58, 0},  //meduim swerve
-    {50, 71,   0,  0,  68,  0,    0},  //goal swerves (skills)
+    {50, 71,   0,  0,  68,  0, 0},  //goal swerves (skills)
    
   };
 
@@ -55,7 +58,7 @@ class Drive {
   float maxStepTurn = 0.2;
 
   float SSMaxCount = 10;
-  float SSMaxCount_t = 9;
+  float SSMaxCount_t = 10;
 
   bool SSActive = true;
   bool SSActive_t = true;
