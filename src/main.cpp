@@ -98,15 +98,17 @@ void opcontrol(){
 	 if(controller.get_digital_new_press(DIGITAL_B)){autonomous();}
      
 	 //Reset the sensors when the X button is called
+	 //Reset the IMU when the up button is called
 	 if(controller.get_digital_new_press(DIGITAL_X)){
-		int iter=0;
-		imu.reset();
-		while (imu.is_calibrating()) {
-		 controller.print(2,0,"Calibrating: %.2f    ", iter/1000);
-		 iter+=20;
-		 pros::delay(20);
-		}
+        imu.reset();
+        float iter = 0;
+        while(imu.is_calibrating()){
+         controller.print(2,0,"Calibrating: %.2f    ", iter/5);
+         iter += 20;
+         pros::delay(20);
+        }
 	 }
+	 
 	 
      //DRIVER CONTROL 
      //create varaibles to hold analog stick values 
