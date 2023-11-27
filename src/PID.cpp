@@ -117,6 +117,14 @@ void Drive::setStandStill(SS_flags dir, uint8_t maxCycles, float maxStep) {
   }
 }
 
+float Drive::getError(){
+  return error;
+}
+
+bool Drive::getPIDStatus(){
+  return isNewPID;
+}
+
 /********************************************************************************************************/
 
 // Basic PID movement function

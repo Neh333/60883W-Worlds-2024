@@ -69,7 +69,7 @@ class Drive {
   void updateStandstill(SS_flags dir, bool &standStill, float error, float lastError, uint8_t &standStillCount);
 
   public:
-  // Functions run when Drive is initialized
+  // Functions ran when Drive is initialized
   Drive() {
    setPID(1);
   }

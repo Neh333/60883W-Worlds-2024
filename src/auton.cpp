@@ -3,7 +3,35 @@
 #include "include.hpp"
 #include "pros/rtos.hpp"
 #include "PID.hpp"
+#include "onError.hpp"
 Drive drive; //object instance of PID named drive 
+
+pros::Mutex onErrorMutex;
+std::vector<errorFuncTuple> onErrorVector;
+
+void Drive::addErrorFunc(float onError, void input()){
+    onErrorVector.emplace_back(errorFuncTuple(input, inchToTick(onError), false));
+}
+
+void onError_fn(void* param){
+  std::uint32_t startTime = pros::millis();
+  while(true){
+  onErrorMutex.take();
+  if(drive.getPIDStatus()){
+    auto iter = onErrorVector.begin();
+    while(iter != onErrorVector.end()){
+      if (!iter->called && (iter->onError >= drive.getError())){
+        iter->func();
+        iter->called = true;
+      }
+      else{iter++;}
+      }
+    }
+    onErrorMutex.give();
+    pros::Task::delay_until(&startTime, 10);  
+  }
+}
+
 
 /* AUTON NOTES 
 *  run turn velo 70 or lower
@@ -34,25 +62,11 @@ void close(){
 }
 
 void far(){
- imu.set_heading(42);
- wingPis.set_value(true);
- intakePis.set_value(true);
+ pros::Task runOnError(onError_fn);
+ drive.addErrorFunc(91, LAMBDA(drive.setMaxVelocity(70)));
+ drive.addErrorFunc(91, LAMBDA(drive.setMaxTurnVelocity(100)));
+
  
- drive.setPID(4);
- drive.move(backward,5,1,70);
-
- drive.setPID(3);
- drive.move(left, imuTarget(0), 1, 70);
-
- wingPis.set_value(false);
-
- drive.setPID(1);
- drive.move(backward, 24, 1, 100);
- moveDriveTrain(-12000, 1);
-
- drive.move(forward, 14, 1, 100);
-
- /*
  drive.setPID(3);
  drive.move(left, imuTarget(90), 1, 100);
 
@@ -80,10 +94,6 @@ void far(){
  intake.move_voltage(12000);
  drive.move(forward, 30, 1, 100);
 
- */
-                 
-                  /*{kP,kPt,kI,kIt,kD,kDt,kPd, }*/
- /*
  drive.setCustomPID(0, 64, 0,  2, 0,  6, 0);
  drive.move(right, imuTarget(250), 2, 100); //193 degree turn
  intake.move_voltage(0);
@@ -95,7 +105,10 @@ void far(){
 
  drive.setPID(1);
  drive.move(backward,12, 1, 100);
- */
+ 
+
+ runOnError.remove();
+ onErrorVector.clear();
 
 }
 

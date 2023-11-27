@@ -1,7 +1,6 @@
 #include "auton.hpp"
 #include "funcs.hpp"
 #include "include.hpp"
-#include "lvgl_funcs.hpp"
 
 #define AUTO_NUMBER 9
 
@@ -28,8 +27,6 @@ void initialize(){
 	if(imu.get_heading() || imu.get_rotation() > 0.5){
 		imu.reset(); 
 	}
-	initBarGraph();
-	pros::Task brainDisplayTask(updateBarGraph_fn);
 } 
 
 
