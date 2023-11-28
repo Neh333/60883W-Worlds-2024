@@ -41,74 +41,31 @@ void onError_fn(void* param){
 */
 
 void close(){   
-  drive.setPID(3);
+ drive.move(forward, 24, 1, 100);
+ pros::delay(1000);
 
-  drive.move(right, 245, 1, 70);
-  pros::delay(1000);
+ /*
+ pros::Task runOnError(onError_fn);
+ drive.setPID(3);
+
+ drive.addErrorFunc(38, LAMBDA(drive.setMaxVelocity(20)));
+ drive.addErrorFunc(38, LAMBDA(drive.setMaxTurnVelocity(90)));
+
+ drive.addErrorFunc(22, LAMBDA(drive.setMaxVelocity(100)));
+ drive.addErrorFunc(22, LAMBDA(drive.setMaxTurnVelocity(20)));
+
+
+ drive.swerve(backwardRight, 66, 90, 3, 100, 25); //90 degree angular change 
+
+ pros::delay(1000);
  
-  drive.move(right, 260, 1, 70);
-  pros::delay(1000);
-
-  drive.move(right, 275, 1, 70);
-  pros::delay(1000);
-
-  drive.move(right, 290, 2, 70);
-  pros::delay(1000);
-
-  drive.move(right, 300, 2, 70);
-  pros::delay(1000);
-
+ runOnError.remove();
+ onErrorVector.clear();
+ */ 
 
 }
 
 void far(){
- pros::Task runOnError(onError_fn);
- drive.addErrorFunc(91, LAMBDA(drive.setMaxVelocity(70)));
- drive.addErrorFunc(91, LAMBDA(drive.setMaxTurnVelocity(100)));
-
- 
- drive.setPID(3);
- drive.move(left, imuTarget(90), 1, 100);
-
- wingPis.set_value(true);
- drive.setPID(1);
-
- //score 1st green
- drive.move(backward, 34, 2, 100);
- intake.move_voltage(0);
- drive.move(forward, 20, 1, 100);
-
- drive.setPID(2);
- wingPis.set_value(false);
-
- intake.move_voltage(-4000);
- drive.move(right, imuTarget(270), 1, 100); //180 degree turn 
- 
- //score second green 
- drive.setPID(1);
- drive.move(forward, 24, 1, 100); 
- intake.move_voltage(-12000);
- pros::delay(50);
- 
- drive.move(right, imuTarget(57), 1, 100);
- intake.move_voltage(12000);
- drive.move(forward, 30, 1, 100);
-
- drive.setCustomPID(0, 64, 0,  2, 0,  6, 0);
- drive.move(right, imuTarget(250), 2, 100); //193 degree turn
- intake.move_voltage(0);
-
- drive.setPID(2);
- intake.move_voltage(-6000);
- drive.move(forward,34, 1, 100);
-
-
- drive.setPID(1);
- drive.move(backward,12, 1, 100);
- 
-
- runOnError.remove();
- onErrorVector.clear();
 
 }
 
@@ -116,30 +73,44 @@ void closeBarTouch(){}
 
 void HighClose(){}
 void HighFar(){
+ pros::Task runOnError(onError_fn);
+ 
  intakePis.set_value(true);
- intake.move_voltage(-12000);
+ //intake.move_voltage(-12000);
  
  //get first green 
- drive.move(forward, 5, 1, 70);
+ //drive.setPID(2);
+ //drive.move(forward, 5, 1, 70);
 
- drive.move(backward, 32, 1, 100);
- wingPis.set_value(true);
+ drive.setPID(3);
+ drive.addErrorFunc(33, LAMBDA(wingPis.set_value(true)));
+ drive.addErrorFunc(32, LAMBDA(drive.setMaxVelocity(20)));
+ drive.addErrorFunc(32, LAMBDA(drive.setMaxTurnVelocity(100)));
  
- //score proeload and two green
- drive.setPID(7);
- drive.swerve(backwardLeft, 36, imuTarget(270), 2, 70, 100);
- intake.move_voltage(0);
+ drive.addErrorFunc(23, LAMBDA(pros::delay(200)));
 
- wingPis.set_value(false);
+ drive.addErrorFunc(16, LAMBDA(drive.setMaxVelocity(100)));
+ drive.addErrorFunc(16, LAMBDA(drive.setMaxTurnVelocity(90)));
+
+ drive.addErrorFunc(16, LAMBDA(wingPis.set_value(false)));
+
+ drive.swerve(backwardLeft, 62, imuTarget(280), 3, 100, 30);
+
+ pros::delay(2000);
+ 
+
+ 
+ /*
+ 
 
  drive.setPID(1);
  drive.move(forward, 4, 1, 70);
 
- drive.setPID(5);
  drive.move(right, imuTarget(90), 2, 70);
  
  intake.move_voltage(12000);
- drive.setPID(4);
+
+ drive.setPID(2);
  drive.move(forward, 12, 1, 80);
 
  //get third green
@@ -149,56 +120,10 @@ void HighFar(){
  drive.setPID(4);
  drive.move(left, imuTarget(33), 1, 70);
 
- wingPis.set_value(false);
- 
- drive.setPID(3);
- drive.move(forward, 32, 3, 100);
+ */
 
- drive.setCustomPID(0, 260, 0, 0, 0, 173, 0);
- drive.move(right, imuTarget(45), 1, 70);
-
- intake.move_voltage(-12000);
-
- drive.setPID(3);
- drive.move(forward, 30, 1, 70);
-
- //score 4th triball
- drive.move(left, imuTarget(0), 1, 70);
- wingPis.set_value(true);
- 
- drive.move(backward, 34, 2, 100);
- intake.move_voltage(0);
- drive.move(forward, 20, 1, 100);
-
- wingPis.set_value(false);
-
- //score 5thtriball
- drive.setPID(5);
- drive.move(right, imuTarget(180), 1, 70); 
- 
- //get 4th green 6th triball
- intake.move_voltage(-12000);
- drive.setPID(1);
- drive.move(forward, 20, 1, 100);
- 
- drive.setPID(4);
- drive.move(backward, 8, 1, 100);
-
- drive.setPID(2);
- drive.move(right, imuTarget(335), 2, 70);
-
- drive.setPID(1);
- drive.move(forward, 28, 1, 100);
-
- drive.move(backward, 20, 1, 100);
- 
- //score 6tn triball
- drive.setPID(5);
- drive.move(right,200,1,70);
- 
- drive.setPID(1);
- drive.move(forward, 20, 1, 100);
- drive.move(backward, 24, 1, 100);
+ runOnError.remove();
+ onErrorVector.clear();
 
 }
 

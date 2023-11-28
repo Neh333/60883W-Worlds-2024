@@ -144,6 +144,8 @@ float Drive::move(PID_dir dir, float target, float timeOut, float maxVelocity) {
   // Standstill variable declerations
   uint8_t standStillCount = 0;
   bool standStill = false;
+  //Tell the onError task that a new PID has begun//
+  isNewPID = true;
   // Establish cutoff time
   const uint32_t endTime = pros::millis() + timeOut * 1000;
 
@@ -295,7 +297,7 @@ float Drive::swerve(PID_dir dir, float target, float target_a, float timeOut, fl
   // Standstill variables//
   uint8_t standStillCount, standStillCount_a = 0;
   bool standStill, standStill_a = false;
-  // Tell the onError task that a new PID has begun//
+  // Tell the onError task that a new PID has begun
   isNewPID = true;
   // End time variable declaration//
   const uint32_t endTime = pros::millis() + timeOut * 1000;
