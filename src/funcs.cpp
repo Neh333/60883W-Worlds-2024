@@ -113,8 +113,14 @@ int velocityToVoltage(float velocity) {
  * \returns Shortest rotation between current and target angle in degrees
  *
  */
+
+/*
 float imuTarget(float target){
   return(fabs(fmod((target-imu.get_heading()+540),360) - 180));
+}
+*/
+float imuTarget(float target){
+  return(fabs(fmod((target-imu.get_heading()+360),360)));
 }
 
 void puncherDown(){
