@@ -81,7 +81,7 @@ void HighFar(){
  moveDriveTrain(-12000, 0.2);
 
  drive.setPID(1);
- drive.move(right, imuTarget(90), 2, 70);
+ drive.move(left, imuTarget(90), 2, 70);
 
  pros::delay(1000);
 
