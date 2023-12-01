@@ -25,9 +25,9 @@ class Drive {
   const float pidConstants[6][7] = {
   /*{kP, kPt, kI, kIt, kD,  kDt, kPd}*/
     {34, 118, 0, 82,  100, 555, 185}, //90 - 240 / gen lat
-    {0,  185,  0, 51,  0,  732,   0}, //30 - 85 / short lat
+    {21, 185, 8, 51,  80,  732, 275}, //30 - 85 / short lat
 
-    {52, 113,  0, 0,  200,  90,   0},  // 1st swerve of high far 
+    {52, 170, 20, 0,  245, 160,   0},  // 1st swerve of high far 
 
     {0,   0,  0,  0,    0,  0, 0},  //aggresive swerves (far side)
     {0,   0,  0,  0,    0,  0, 0},  //? swerves
