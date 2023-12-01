@@ -114,14 +114,16 @@ int velocityToVoltage(float velocity) {
  *
  */
 
-/*
+
 float imuTarget(float target){
   return fabs(fmod((target-imu.get_heading()+360),360));
 }
-*/
+
+/*
 float imuTarget(float target){
   return(fabs(fmod((target-imu.get_heading()+360),360)));
 }
+*/
 
 void puncherDown(){
    puncherR.set_data_rate(5);
