@@ -61,40 +61,32 @@ void HighFar(){
 
  intakePis.set_value(true);
  intake.move_voltage(-12000);
+
  pros::delay(300);
 
- //get first green 
- //drive.setPID(2);
- //drive.move(forward, 5, 1, 70);
+ //get first green
+ moveDriveTrain(12000, 0.2);
 
  drive.setPID(3);
- drive.addErrorFunc(33, LAMBDA(wingPis.set_value(true)));
- drive.addErrorFunc(32, LAMBDA(drive.setMaxVelocity(20)));
- drive.addErrorFunc(32, LAMBDA(drive.setMaxTurnVelocity(100)));
- 
- drive.addErrorFunc(23, LAMBDA(pros::delay(200)));
+ drive.addErrorFunc(39, LAMBDA(drive.setMaxVelocity(20)));
+ drive.addErrorFunc(39, LAMBDA(drive.setMaxTurnVelocity(25)));
+ drive.addErrorFunc(38, LAMBDA(wingPis.set_value(true)));
+ //drive.addErrorFunc(25, LAMBDA(pros::delay(200)));
+ drive.addErrorFunc(22, LAMBDA(wingPis.set_value(false)));
+ drive.addErrorFunc(21.5, LAMBDA(drive.setMaxVelocity(40)));
+ drive.addErrorFunc(21.5, LAMBDA(drive.setMaxTurnVelocity(100)));
 
- drive.addErrorFunc(16, LAMBDA(drive.setMaxVelocity(100)));
- drive.addErrorFunc(16, LAMBDA(drive.setMaxTurnVelocity(90)));
-
- drive.addErrorFunc(16, LAMBDA(wingPis.set_value(false)));
-
- drive.swerve(backwardLeft, 62, imuTarget(280), 3, 100, 30);
+ drive.swerve(backwardLeft, 67, imuTarget(275), 2, 100, 30);
 
  moveDriveTrain(-12000, 0.2);
 
  drive.setPID(1);
- drive.move(forward, 4, 1, 70);
+ drive.move(right, imuTarget(90), 2, 70);
 
- drive.move(left, imuTarget(90), 2, 70);
- 
- intake.move_voltage(12000);
-
+ pros::delay(1000);
 
  intake.move_voltage(12000);
  moveDriveTrain(12000, 0.5);
-
- 
 
  runOnError.remove();
  onErrorVector.clear();
