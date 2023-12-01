@@ -153,7 +153,7 @@ float Drive::move(PID_dir dir, float target, float timeOut, float maxVelocity) {
     // Drive specific variables
     const float tickTarget = inchToTick(target);
     const float initialAngle_d = headingValue();
-    const float integralActive = inchToTick(1);
+    const float integralActive = inchToTick(3);
     float errorDrift;
     float proportionDrift;
 
@@ -285,7 +285,7 @@ float Drive::swerve(PID_dir dir, float target, float target_a, float timeOut, fl
   float derivative_a;
   // integral var declarations//
   const float integralActive = inchToTick(3);
-  const float integralActive_a = 2.2;
+  const float integralActive_a = 4;
   // Motor output var declarations//
   maxVolt = percentToVoltage(maxVel);
   maxVolt_a = percentToVoltage(maxVel_a);
@@ -303,8 +303,6 @@ float Drive::swerve(PID_dir dir, float target, float target_a, float timeOut, fl
   const uint32_t endTime = pros::millis() + timeOut * 1000;
   // Begin PID//
   while (pros::millis() < endTime && !(standStill && standStill_a)) {
-    /********************************************DRIVE***************************************************/
-
     // Calculate current error which is used for proportion
     error = tickTarget - fabs(motorAvgAll() - initialMotorAvg);
 
@@ -333,8 +331,7 @@ float Drive::swerve(PID_dir dir, float target, float target_a, float timeOut, fl
     finalValueLeft = finalVolt * reverseVal;
 
     /********************************************TURN****************************************************/
-
-    // Update error differently depending on if a "shortest" direction is being used
+    //Calculate angular error 
     error_a = target_a - fabs(rotationValue() + 360 - initialAngle);
 
     // Calculate and update the integral term
