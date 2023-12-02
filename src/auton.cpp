@@ -41,26 +41,69 @@ void onError_fn(void* param){
 */
 
 void close(){   
+ pros::Task runOnError(onError_fn);
  intakePis.set_value(true);
  pros::delay(100);
  imu.set_heading(318);
 
  intake.move_voltage(-12000);
  
- moveDriveTrain(1300, 0.1);
+ moveDriveTrain(6000, 0.1);
  wingPis.set_value(true);
- pros::delay(400);
+ pros::delay(300);
  wingPis.set_value(false);
  
  drive.setPID(5);
- drive.swerve(forwardRight, 20, imuTarget(360),2,45,100);
+ 
+ drive.addErrorFunc(8, LAMBDA(drive.setMaxVelocity(95)));
+ drive.swerve(forwardRight, 22, imuTarget(360),2,35,100);
+
+ intake.move_voltage(12000);
+ 
+ moveDriveTrain(-12000, 0.1);
+ 
+ /*
+ drive.setPID(1);
+ drive.move(right, imuTarget(90), 1, 70);
+
+ drive.move(forward, 22, 1, 100);
+
+ drive.move(right, imuTarget(180), 1, 70);
+
+ drive.move(backward, 30, 1, 100);
+
+ drive.move(right, imuTarget(273), 1, 70);
+
+ wingPis.set_value(true);
+
+ pros::delay(50);
+
+ drive.move(backward, 22, 1, 100);
+
+ moveDriveTrain(-12000, 0.2);
+
+ wingPis.set_value(false);
+
+ drive.move(forward, 24, 1, 100);
+
+ drive.move(left, imuTarget(180), 1, 70);
+
+ drive.move(forward, 42, 2, 100);
 
  intake.move_voltage(12000);
 
+ drive.move(left, imuTarget(90), 1, 70);
+
+ drive.move(forward, 30, 1, 100);
+ */
+
+ runOnError.remove();
+ onErrorVector.clear();
 }
 
 void far(){
-
+ 
+ 
 }
 
 void closeBarTouch(){}
