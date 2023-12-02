@@ -62,34 +62,32 @@ void HighFar(){
  intakePis.set_value(true);
  intake.move_voltage(-12000);
 
- pros::delay(300);
+ pros::delay(200);
 
  //get first green
  moveDriveTrain(12000, 0.2);
 
  drive.setPID(3);
- drive.addErrorFunc(36, LAMBDA(drive.setMaxVelocity(20)));
- drive.addErrorFunc(36, LAMBDA(drive.setMaxTurnVelocity(50)));
- drive.addErrorFunc(36, LAMBDA(wingPis.set_value(true)));
+ drive.addErrorFunc(43, LAMBDA(wingPis.set_value(true)));
+ drive.addErrorFunc(43, LAMBDA(drive.setMaxVelocity(35)));
+ drive.addErrorFunc(43, LAMBDA(drive.setMaxTurnVelocity(80)));
 
- drive.addErrorFunc(24, LAMBDA(wingPis.set_value(false)));
+ drive.addErrorFunc(22, LAMBDA(wingPis.set_value(false)));
 
- drive.addErrorFunc(14, LAMBDA(drive.setMaxVelocity(100)));
- drive.addErrorFunc(14, LAMBDA(drive.setMaxTurnVelocity(30)));
+ drive.addErrorFunc(22, LAMBDA(drive.setMaxVelocity(100)));
+ drive.addErrorFunc(22, LAMBDA(drive.setMaxTurnVelocity(30)));
 
+ drive.swerve(backwardLeft, 68, imuTarget(270), 2, 100, 30);
 
- drive.swerve(backwardLeft, 63, imuTarget(285), 2, 100, 30);
+ pros::delay(2000);
 
- pros::delay(5000);
- /*
- moveDriveTrain(-12000, 0.4);
+ moveDriveTrain(12000, 0.4);
 
  drive.setPID(1);
- drive.move(right, imuTarget(120), 2, 70);
+ drive.move(left, imuTarget(100), 2, 70);
 
  intake.move_voltage(12000);
- moveDriveTrain(12000, 0.8);
- */
+ moveDriveTrain(12000, 0.4);
 
  runOnError.remove();
  onErrorVector.clear();
@@ -100,117 +98,95 @@ void closeRush(){}
 void farRush(){}
 
 void skills(){
+  pros::Task runOnError (onError_fn);
+
  //sec1
- imu.set_heading(320);
- drive.setPID(7);
- drive.swerve(backwardRight, 30, imuTarget(0), 1, 52, 100);
- pros::delay(1000);
-
+ intakePis.set_value(true);
+ imu.set_heading(318);
  drive.setPID(4);
+ drive.swerve(backwardRight, 28, imuTarget(258), 1, 55, 100);
+ 
+ drive.setPID(2);
  drive.move(forward, 6, 1, 70);
+ drive.move(left, imuTarget(310), 1, 70);
 
  drive.setPID(1);
- drive.move(left, imuTarget(280), 1, 70);
+ drive.move(forward, 16, 1, 80);
 
-
- drive.setPID(1);
- drive.move(forward, 20, 1, 70);
+ drive.move(right, imuTarget(65), 1, 70); 
  
+ drive.setPID(2);
+ drive.move(forward, 6, 1, 13);
 
- drive.setCustomPID(0, 56, 0, 0, 0, 101, 0);
- drive.move(right, imuTarget(64), 1, 70); 
- 
- drive.setCustomPID(13, 0, 0, 0, 17, 0, 123);
- drive.move(forward, 16, 1, 100);
-
- 
  //shoot match loads 
  puncher.move_voltage(10000);
  pros::delay(34000);
  puncher.move_voltage(0);
-
  
- puncherDown();
+ puncher.move_voltage(8000);
+ pros::delay(500);
+ puncher.move_voltage(0);
 
  //sec 2
  //go to other side 
- drive.setCustomPID(0, 83, 0, 0, 0, 57, 0);
- drive.move(right, imuTarget(125), 1, 100); //61 degree turn 
+ drive.setPID(2);
+ drive.move(right, imuTarget(125), 1, 100); 
 
- 
+ drive.move(backward, 14, 1, 100);
+
+ drive.move(left, imuTarget(85), 1, 70);
+
  drive.setPID(1);
- drive.move(backward, 18, 1, 100);
- 
- 
- drive.setPID(3);
- drive.move(left, imuTarget(92), 1, 70);
-
- intakePis.set_value(true);
- 
-       
  drive.move(backward, 72, 2, 70);
  
  //swerve to goal first push
- intakePis.set_value(false);
+  drive.setPID(3); 
+  drive.addErrorFunc(25, LAMBDA(drive.setMaxVelocity(45)));
+  drive.swerve(backwardLeft, 50, imuTarget(360), 2, 75, 100); 
 
- 
-  drive.setPID(8); 
-  drive.swerve(backwardLeft, 44, imuTarget(360), 2, 80, 100); //268 degree turn 
+  moveDriveTrain(-12000, .5);
 
-  moveDriveTrain(-12000, .6);
-
-       
-  drive.setPID(4);
-  drive.move(forward, 14, 1,70);
+  drive.setPID(2);
+  drive.move(forward, 12, 1,70);
   
   drive.setPID(1);
-  drive.move(right, imuTarget(115), 1, 70);
+  drive.move(right, imuTarget(100), 1, 70);
 
-  drive.setPID(1);
   drive.move(forward, 48, 1, 100);
   
-  drive.setPID(3);
-  drive.move(left, imuTarget(80), 1, 70);
-  
-
+  drive.setPID(2);
+  drive.move(left, imuTarget(60), 1, 70);
+ 
   //2nd push
   wingPis.set_value(true);
   drive.setPID(1);
-  drive.move(backward, 22, 1, 100);
+  drive.move(backward, 26, 1, 100);
+  moveDriveTrain(-12000, .5);
+
   
   wingPis.set_value(false);
-
-  drive.move(forward, 26, 1, 100);
   
-  drive.setPID(3);
-  drive.move(left,imuTarget(30),1,100);
+  drive.setPID(2);
+  drive.move(right, imuTarget(100), 1, 70);
 
-  wingPis.set_value(true);
-  pros::delay(200);
-   
-  
-  //3rd push 
-  drive.setPID(8);
-  drive.swerve(backwardRight, 38, imuTarget(90), 1, 100, 95);
-  moveDriveTrain(-12000, 1);
-
-  
-
-  /*  
-  wingPis.set_value(false);             
-  drive.setCustomPID(60,  110, 0,  60,   151, 177,  0);
-  drive.swerve(forwardRight, 48, imuTarget(200), 2.5, 70, 100); 
+  drive.setPID(1);
+  drive.move(forward, 22, 1, 100);
   
   drive.setPID(1);
-  drive.move(left, imuTarget(110), 1, 100);
+  drive.move(left,imuTarget(30),1,100);
+
+  wingPis.set_value(true); 
+   
+  //3rd push 
+  drive.setPID(3);
+
+  drive.swerve(backwardRight, 38, imuTarget(90), 1, 90, 100);
+  moveDriveTrain(-12000, 0.5);
+  moveDriveTrain(12000, 0.2);
+  moveDriveTrain(-12000, 0.5);
   
-
-  //4th push 
-  drive.setPID(4);
-  drive.swerve(backwardRight, 32, imuTarget(180), 1, 100, 60);
-  moveDriveVoltage(-12000);
-  */
-
+ runOnError.remove();
+ onErrorVector.clear();
 }
 
 void nothing(){}

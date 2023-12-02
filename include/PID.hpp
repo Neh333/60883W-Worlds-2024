@@ -26,10 +26,9 @@ class Drive {
   /*{kP, kPt, kI, kIt, kD,  kDt, kPd}*/
     {34, 118, 0, 82,  100, 555, 185}, //90 - 240 / gen lat
     {21, 185, 8, 51,  80,  732, 275}, //30 - 85 / short lat
+    {54, 70,  0, 0,   245, 160,   0},  //1st swerve of high far 
 
-    {54, 70,  0, 0,   245, 160,   0},  // 1st swerve of high far 
-
-    {0,   0,  0,  0,    0,  0, 0},  //aggresive swerves (far side)
+    {60,  75,  0,  0,    70, 100, 0},  //small swerve (match loader starts)
     {0,   0,  0,  0,    0,  0, 0},  //? swerves
     {0,   0,  0,  0,    0,  0, 0},  //goal swerves (skills)
   };

@@ -129,11 +129,9 @@ void puncherDown(){
    puncherR.set_data_rate(5);
    float pPos = puncher.get_position()/100;
    float target = 5;
-
    const uint32_t cutOff = pros::millis() + 1000;
    
-   if (pPos <= target) {puncher.move_voltage(0);}
-   else{puncher.move_voltage(4500);}
+   puncher.move_voltage(4500);
    
    while ((pros::millis() < cutOff) && (pPos >= target)) {
     //Wait until the cata is where it should be
