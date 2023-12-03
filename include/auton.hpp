@@ -3,8 +3,6 @@ void close();
 void far();
 
 void closeBarTouch();
-
-void HighClose();
 void HighFar();
 
 void closeRush();

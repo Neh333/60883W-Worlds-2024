@@ -2,7 +2,7 @@
 #include "funcs.hpp"
 #include "include.hpp"
 
-#define AUTO_NUMBER 9
+#define AUTO_NUMBER 8
 
 //Global Variable Declaration
 uint8_t auton = AUTO_NUMBER; 
@@ -12,12 +12,11 @@ uint8_t auton = AUTO_NUMBER;
 		case 0: controller.print(2, 0, "Close  %.2f                       ",imu.get_heading()); break;\
 		case 1: controller.print(2, 0, "Far %.2f                          ",imu.get_heading()); break;\
 		case 2: controller.print(2, 0, "Close Bar Touch %.2f              ",imu.get_heading()); break;\
-		case 3: controller.print(2, 0, "Close High %.2f                   ",imu.get_heading()); break;\
-		case 4: controller.print(2, 0, "Far High %.2f                     ",imu.get_heading()); break;\
-		case 5: controller.print(2, 0, "Close Rush %.2f                   ",imu.get_heading()); break;\
-		case 6: controller.print(2, 0, "Far Rush  %.2f                    ",imu.get_heading()); break;\
-		case 7: controller.print(2, 0, "Skills %.2f                       ",imu.get_heading()); break;\
-		case 8: controller.print(2, 0, "Nothing %.2f                      ",imu.get_heading()); break;\
+		case 3: controller.print(2, 0, "Far High %.2f                     ",imu.get_heading()); break;\
+		case 4: controller.print(2, 0, "Close Rush %.2f                   ",imu.get_heading()); break;\
+		case 5: controller.print(2, 0, "Far Rush  %.2f                    ",imu.get_heading()); break;\
+		case 6: controller.print(2, 0, "Skills %.2f                       ",imu.get_heading()); break;\
+		case 7: controller.print(2, 0, "Nothing %.2f                      ",imu.get_heading()); break;\
 	}\
 }
 
@@ -53,28 +52,19 @@ void competition_initialize(){
 
 
 void autonomous(){
-
-	/*TO DO:
-	* make sure auto displayed goes with the auto ran
-	*
-	*/
-
 	switch(auton%AUTO_NUMBER){
 		case 0: close();	     break;
 		case 1: far();           break;
 		case 2: closeBarTouch(); break;
-		case 3: HighClose();     break;
-		case 4: HighFar();       break;
-		case 5: closeRush();     break;
-		case 6: farRush();       break;
-		case 7: skills();        break;
-		case 8: nothing();       break;
+		case 3: HighFar();       break;
+		case 4: closeRush();     break;
+		case 5: farRush();       break;
+		case 6: skills();        break;
+		case 7: nothing();       break;
 	}
 }
 
 void opcontrol(){
- bool puncherTog2 = true;
- bool puncherTog = true;
  bool wingTog = true;
  bool intakePisTog = false;
  bool liftTog = false;
@@ -106,7 +96,6 @@ void opcontrol(){
         }
 	 }
 	 
-	 
      //DRIVER CONTROL 
      //create varaibles to hold analog stick values 
      int8_t leftY = controller.get_analog(ANALOG_LEFT_Y);
@@ -134,12 +123,10 @@ void opcontrol(){
 	 if (!intakePisTog) {intakePis.set_value(false);}
 	 else {intakePis.set_value(true);}
 
-     
 	 if(controller.get_digital_new_press(DIGITAL_UP)){ liftTog = !liftTog; }
 	 if (!liftTog) {hangPis.set_value(false);}
 	 else {hangPis.set_value(true);}
 	 
-
 	 if (controller.get_digital(DIGITAL_R1)) { puncher.move_voltage(10000);}
 	 else if (controller.get_digital(DIGITAL_R2)) {puncher.move_voltage(12000);}
 	 else {puncher.move_voltage(0);}
