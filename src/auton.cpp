@@ -32,7 +32,6 @@ void onError_fn(void* param){
   }
 }
 
-
 /* AUTON NOTES 
 *  run turn velo 70 or lower
 *  run gen lat 100
@@ -62,7 +61,6 @@ void close(){
  
  moveDriveTrain(-12000, 0.1);
  
- /*
  drive.setPID(1);
  drive.move(right, imuTarget(90), 1, 70);
 
@@ -95,15 +93,12 @@ void close(){
  drive.move(left, imuTarget(90), 1, 70);
 
  drive.move(forward, 30, 1, 100);
- */
 
  runOnError.remove();
  onErrorVector.clear();
 }
 
 void far(){
- 
- 
 }
 
 void closeBarTouch(){}
@@ -165,7 +160,6 @@ void HighFar(){
  moveDriveTrain(-12000, 0.2);
  */
  
-
  runOnError.remove();
  onErrorVector.clear();
 
