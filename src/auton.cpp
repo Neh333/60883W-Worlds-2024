@@ -47,7 +47,8 @@ void close(){
 
  intake.move_voltage(-12000);
  
- moveDriveTrain(6000, 0.1);
+ //moveDriveTrain(4000, 0.1);
+ drive.move(forward, 4, 1, 100);
  wingPis.set_value(true);
  pros::delay(300);
  wingPis.set_value(false);
@@ -68,7 +69,7 @@ void close(){
 
  drive.move(right, imuTarget(180), 1, 70);
 
- drive.move(backward, 30, 1, 100);
+ drive.move(backward, 32, 2, 100);
 
  drive.move(right, imuTarget(273), 1, 70);
 
@@ -86,13 +87,13 @@ void close(){
 
  drive.move(left, imuTarget(180), 1, 70);
 
- drive.move(forward, 42, 2, 100);
+ drive.move(forward, 45, 3, 100);
 
  intake.move_voltage(12000);
 
  drive.move(left, imuTarget(90), 1, 70);
 
- drive.move(forward, 30, 1, 100);
+ drive.move(forward, 28, 1, 100);
 
  runOnError.remove();
  onErrorVector.clear();

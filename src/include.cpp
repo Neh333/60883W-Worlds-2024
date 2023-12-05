@@ -10,7 +10,7 @@ pros::Motor frontright(20 ,false);
 pros::Motor midright(10, false);
 pros::Motor backright(8, true);
 
-pros::Motor frontleft(11, true);
+pros::Motor frontleft(12, true);
 pros::Motor midleft(1, true);
 pros::Motor backleft(2, false);
 
