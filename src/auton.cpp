@@ -40,6 +40,7 @@ void onError_fn(void* param){
 */
 
 void close(){   
+
  pros::Task runOnError(onError_fn);
  intakePis.set_value(true);
  pros::delay(100);
@@ -48,9 +49,10 @@ void close(){
  intake.move_voltage(-12000);
  
  //moveDriveTrain(4000, 0.1);
- drive.move(forward, 4, 1, 100);
+ drive.setPID(2);
+ drive.move(forward, 4, 1, 70);
  wingPis.set_value(true);
- pros::delay(300);
+ pros::delay(200);
  wingPis.set_value(false);
  
  drive.setPID(5);
@@ -69,7 +71,7 @@ void close(){
 
  drive.move(right, imuTarget(180), 1, 70);
 
- drive.move(backward, 32, 2, 100);
+ drive.move(backward, 30, 2, 100);
 
  drive.move(right, imuTarget(273), 1, 70);
 
@@ -87,16 +89,19 @@ void close(){
 
  drive.move(left, imuTarget(180), 1, 70);
 
- drive.move(forward, 45, 3, 100);
+ drive.setCustomPID(20,0,28,0,120,0,250);
+ drive.move(forward, 52, 4, 100);
 
  intake.move_voltage(12000);
-
+ 
+ drive.setPID(1);
  drive.move(left, imuTarget(90), 1, 70);
 
  drive.move(forward, 28, 1, 100);
 
  runOnError.remove();
  onErrorVector.clear();
+ 
 }
 
 void far(){
