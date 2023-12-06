@@ -104,8 +104,7 @@ void close(){
  
 }
 
-void far(){
-}
+void far(){}
 
 void closeBarTouch(){}
 
