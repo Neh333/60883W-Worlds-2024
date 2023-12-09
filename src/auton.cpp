@@ -24,7 +24,7 @@ void onError_fn(void* param){
         iter->func();
         iter->called = true;
       }
-      else{iter++;}
+      iter++;
       }
     }
     onErrorMutex.give();
@@ -41,6 +41,9 @@ void onError_fn(void* param){
 
 void close(){   
 
+ pros::delay(3000);
+
+ /*
  pros::Task runOnError(onError_fn);
  intakePis.set_value(true);
  pros::delay(100);
@@ -81,7 +84,7 @@ void close(){
 
  drive.move(backward, 22, 1, 100);
 
- moveDriveTrain(-12000, 0.2);
+ moveDriveTrain(-12000, 0.1);
 
  wingPis.set_value(false);
 
@@ -101,6 +104,7 @@ void close(){
 
  runOnError.remove();
  onErrorVector.clear();
+ */
  
 }
 
@@ -187,8 +191,9 @@ void HighFar(){
  intake.move_voltage(-12000);
 
  drive.setPID(5);
- drive.addErrorFunc(44, LAMBDA(drive.setMaxTurnVelocity(60)));
+ drive.addErrorFunc(52, LAMBDA(drive.setMaxTurnVelocity(80)));
  drive.swerve(forwardRight, 58, imuTarget(44), 2, 100, 30);
+
  drive.setPID(1);
  drive.move(left, imuTarget(0), 1, 70);
 
@@ -203,13 +208,17 @@ void HighFar(){
 
  drive.move(left, 180, 1, 70);
 
+ intake.move_voltage(-12000);
+
  moveDriveTrain(12000, 0.3);
+ moveDriveTrain(-12000, 0.3);
  
- /*
+
  drive.move(right, imuTarget(340), 1, 70);
 
  drive.move(forward, 18, 1, 100);
-
+ 
+  /*
  drive.move(left, imuTarget(172), 1, 70);
 
  drive.move(forward, 28, 1, 100);
@@ -231,7 +240,7 @@ void skills(){
  intakePis.set_value(true);
  imu.set_heading(318);
  drive.setPID(4);
- drive.swerve(backwardRight, 28, imuTarget(258), 1, 55, 100);
+ drive.swerve(backwardRight, 26, imuTarget(5), 2, 60, 100);
  
  drive.setPID(2);
  drive.move(forward, 6, 1, 70);
@@ -242,8 +251,10 @@ void skills(){
 
  drive.move(right, imuTarget(65), 1, 70); 
  
- drive.setPID(2);
- drive.move(forward, 6, 1, 13);
+ 
+ drive.setCustomPID(50,0,2,0,160,0,85);
+ drive.move(forward, 4, 2, 20);
+
 
  //shoot match loads 
  puncher.move_voltage(10000);
@@ -308,9 +319,9 @@ void skills(){
  drive.setPID(3);
 
  drive.swerve(backwardRight, 38, imuTarget(90), 1, 90, 100);
- moveDriveTrain(-12000, 0.5);
- moveDriveTrain(12000, 0.2);
- moveDriveTrain(-12000, 0.5);
+ moveDriveTrain(-12000, 0.3);
+ moveDriveTrain(12000, 0.1);
+ moveDriveTrain(-12000, 0.3);
   
  runOnError.remove();
  onErrorVector.clear();
