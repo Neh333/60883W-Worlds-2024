@@ -58,7 +58,7 @@ void close(){
  drive.addErrorFunc(25, LAMBDA(drive.setMaxVelocity(100)));
  drive.addErrorFunc(25, LAMBDA(drive.setMaxTurnVelocity(60)));
  drive.addErrorFunc(8, LAMBDA(wingPis.set_value(false)));
- drive.setCustomPID(60, 95,  0,  0,  90, 120,   0);
+ drive.setCustomPID(60, 92,  0,  0,  90, 120,   0);
  drive.swerve(backwardLeft, 40, imuTarget(275),2,100,70);
  
  drive.setPID(1);
