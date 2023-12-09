@@ -28,8 +28,8 @@ class Drive {
     {21, 185, 8, 51,   80, 732, 275}, //30 - 85 / short lat
     {60, 58,  13, 0,  245, 160,   0}, //1st swerve of high far 
     {60, 75,  0,  0,   70, 100,   0}, //small swerve (match loader starts)
-    {70, 100, 0, 0,   80,  130,   0}, //smaller swerve close side 
-    {50, 80,  13, 0,  245, 160,   0},  //aggr far 
+    {70, 100, 0, 0,   80,  130,   0}, //smaller swerve close side (no)
+    {50, 80,  13, 0,  245, 160,   0}, //aggr far 
   };
 
   float kP;

@@ -40,71 +40,33 @@ void onError_fn(void* param){
 */
 
 void close(){   
-
- pros::delay(3000);
-
- /*
  pros::Task runOnError(onError_fn);
- intakePis.set_value(true);
- pros::delay(100);
- imu.set_heading(318);
-
+ imu.set_heading(315);
  intake.move_voltage(-12000);
+ intakePis.set_value(true);
  
- //moveDriveTrain(4000, 0.1);
- drive.setPID(2);
- drive.move(forward, 4, 1, 70);
- wingPis.set_value(true);
- pros::delay(200);
- wingPis.set_value(false);
- 
- drive.setPID(5);
- 
+ drive.setPID(4);
  drive.addErrorFunc(8, LAMBDA(drive.setMaxVelocity(95)));
- drive.swerve(forwardRight, 22, imuTarget(360),2,35,100);
+ drive.swerve(forwardRight, 24, imuTarget(0),2,35,100);
 
  intake.move_voltage(12000);
+ pros::delay(200);
  
- moveDriveTrain(-12000, 0.1);
- 
- drive.setPID(1);
- drive.move(right, imuTarget(90), 1, 70);
-
- drive.move(forward, 22, 1, 100);
-
- drive.move(right, imuTarget(180), 1, 70);
-
- drive.move(backward, 30, 2, 100);
-
- drive.move(right, imuTarget(273), 1, 70);
-
- wingPis.set_value(true);
-
- pros::delay(50);
-
- drive.move(backward, 22, 1, 100);
-
- moveDriveTrain(-12000, 0.1);
-
- wingPis.set_value(false);
-
- drive.move(forward, 24, 1, 100);
-
- drive.move(left, imuTarget(180), 1, 70);
-
- drive.setCustomPID(20,0,28,0,120,0,250);
- drive.move(forward, 52, 4, 100);
-
- intake.move_voltage(12000);
+ drive.addErrorFunc(30, LAMBDA(drive.setMaxVelocity(30)));
+ drive.addErrorFunc(30, LAMBDA(drive.setMaxTurnVelocity(100)));
+ drive.addErrorFunc(30, LAMBDA(wingPis.set_value(true)));
+ drive.addErrorFunc(25, LAMBDA(drive.setMaxVelocity(100)));
+ drive.addErrorFunc(25, LAMBDA(drive.setMaxTurnVelocity(60)));
+ drive.addErrorFunc(8, LAMBDA(wingPis.set_value(false)));
+ drive.setCustomPID(60, 95,  0,  0,  90, 120,   0);
+ drive.swerve(backwardLeft, 40, imuTarget(275),2,100,70);
  
  drive.setPID(1);
- drive.move(left, imuTarget(90), 1, 70);
-
- drive.move(forward, 28, 1, 100);
+ drive.move(left, 180, 2, 70);
+ drive.move(forward, 26, 1, 100);
 
  runOnError.remove();
  onErrorVector.clear();
- */
  
 }
 
@@ -145,8 +107,6 @@ void far(){
  drive.setPID(2);
  drive.move(left, imuTarget(370), 2, 70);
  intake.move_voltage(-12000);
-
-
  
  runOnError.remove();
  onErrorVector.clear();
