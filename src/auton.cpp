@@ -63,7 +63,7 @@ void close(){
  
  drive.setPID(1);
  drive.move(left, 180, 2, 70);
- drive.move(forward, 26, 1, 100);
+ drive.move(forward, 24, 1, 100);
 
  runOnError.remove();
  onErrorVector.clear();
@@ -116,75 +116,87 @@ void closeBarTouch(){}
 
 void HighFar(){
  pros::Task runOnError(onError_fn);
-
+ 
+ //get first green
  intakePis.set_value(true);
  intake.move_voltage(-12000);
-
- pros::delay(200);
-
- //get first green
+ pros::delay(100);
  moveDriveTrain(12000, 0.2);
 
  drive.setPID(3);
  drive.addErrorFunc(43, LAMBDA(wingPis.set_value(true)));
  drive.addErrorFunc(43, LAMBDA(drive.setMaxVelocity(35)));
  drive.addErrorFunc(43, LAMBDA(drive.setMaxTurnVelocity(95)));
- drive.addErrorFunc(22, LAMBDA(wingPis.set_value(false)));
  drive.addErrorFunc(22, LAMBDA(drive.setMaxVelocity(100)));
  drive.addErrorFunc(22, LAMBDA(drive.setMaxTurnVelocity(30)));
+ drive.addErrorFunc(10, LAMBDA(wingPis.set_value(false)));
 
- drive.swerve(backwardLeft, 68, imuTarget(280), 2, 100, 30);
+ drive.swerve(backwardLeft, 68, imuTarget(280), 2, 100, 25);
  
- moveDriveTrain(12000, 0.2);
+ moveDriveTrain(12000, 0.1);
 
  drive.setPID(1);
  drive.move(right, imuTarget(100), 2, 70);
 
  intake.move_voltage(12000);
- moveDriveTrain(12000, 0.4);
-
- intake.move_voltage(12000);
- moveDriveTrain(-12000, 0.4);
+ moveDriveTrain(12000, 0.5);
  
  drive.setPID(2);
- drive.move(left, imuTarget(37), 2, 70);
- intake.move_voltage(-12000);
+ drive.move(backward, 18, 1, 70);
+ 
 
- drive.setPID(5);
- drive.addErrorFunc(52, LAMBDA(drive.setMaxTurnVelocity(80)));
- drive.swerve(forwardRight, 58, imuTarget(44), 2, 100, 30);
+ drive.move(left, imuTarget(30), 2, 70);
+ intake.move_voltage(-12000);
+ wingPis.set_value(false);
+
 
  drive.setPID(1);
- drive.move(left, imuTarget(0), 1, 70);
+ drive.move(forward, 46, 4, 100);
+ 
+ drive.move(right, imuTarget(141), 1, 70);
+ 
+ /*
+ drive.setPID(2);
+ drive.move(forward,12,1,70);
 
- wingPis.set_value(true);
- pros::delay(100);
+ intake.move_voltage(12000);
+ pros::delay(500);
 
- drive.move(backward, 30, 1, 100);
+ 
+ drive.setPID(1);
+ drive.move(left, imuTarget(50), 1, 70);
+ drive.move(forward,20,1,70);
 
+
+ drive.move(backward, 26, 1, 100);
+ moveDriveTrain(-12000, 0.2);
  moveDriveTrain(12000, 0.1);
 
  wingPis.set_value(false);
 
- drive.move(left, 180, 1, 70);
 
+ drive.move(left, 185, 2, 70);
+
+ intake.move_voltage(12000);
+
+ moveDriveTrain(12000, 0.35);
+ moveDriveTrain(-12000, 0.1);
+ 
+ drive.move(right, imuTarget(333), 1, 70);
  intake.move_voltage(-12000);
 
- moveDriveTrain(12000, 0.3);
- moveDriveTrain(-12000, 0.3);
+ drive.move(forward, 24, 1, 100);
  
+ drive.move(left, imuTarget(170), 1, 70);
 
- drive.move(right, imuTarget(340), 1, 70);
+ drive.move(forward, 24, 1, 100);
 
- drive.move(forward, 18, 1, 100);
- 
-  /*
- drive.move(left, imuTarget(172), 1, 70);
+ intake.move_voltage(12000);
 
- drive.move(forward, 28, 1, 100);
+ moveDriveTrain(12000, 0.5);
+ moveDriveTrain(-12000, 0.1);
  */
 
- 
  runOnError.remove();
  onErrorVector.clear();
 
