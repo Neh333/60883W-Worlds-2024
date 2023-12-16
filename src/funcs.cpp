@@ -1,7 +1,35 @@
 #include "funcs.hpp"
 #include "include.hpp"
 #include "pros/rtos.hpp"
+ /*
+float setApexPoint(std::vector<void>& path, float aPoint){
 
+}
+
+std::pair<float, float> findOptVelos(std::vector<void> path,float maxVelo, float maxVelo_a){
+ const float inital_Angle = imu.get_heading();
+ const float inital_Velo = actualVelocityAll();
+ const float side_To_Side_CoeF = 0.0f;
+ const float max_Velo = maxVelo;
+ const float max_Velo_A = maxVelo_a;
+ 
+ float error, error_a;
+ float curAngle;
+
+
+ float final_A = (inital_Angle - curAngle);
+ float final; 
+
+ return std::make_pair(final, final_A);
+
+}
+
+void applyOptimalVelo(float veloA, float Velo){
+  std::vector<void> placeHolderPath;
+  auto iter = findOptVelos(placeHolderPath,0,0);
+  
+}
+*/
 
 void setBrakeMode(pros::motor_brake_mode_e brakeMode) {
   frontright.set_brake_mode(brakeMode);

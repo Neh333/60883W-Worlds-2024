@@ -25,6 +25,6 @@ pros::Rotation puncherR(3);
 pros::Vision vison(14);
 
 //pistions
-pros::ADIDigitalOut wingPis('H');
+pros::ADIDigitalOut wingPis('F');
 pros::ADIDigitalOut intakePis('G');
-pros::ADIDigitalOut hangPis('F');
+pros::ADIDigitalOut hangPis('H');
