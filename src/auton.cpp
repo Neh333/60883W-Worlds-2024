@@ -76,9 +76,7 @@ void far(){
  imu.set_heading(41.5);
  pros::Task runOnError(onError_fn);
  intakePis.set_value(true);
-
  wingPis.set_value(true);
- pros::delay(50);
 
  drive.setPID(2);
  drive.move(backward, 8, 1, 70);
@@ -92,7 +90,7 @@ void far(){
  drive.move(forward, 12, 1, 70);
 
  drive.setPID(1);
- drive.move(right, imuTarget(105), 1, 70);
+ drive.move(right, imuTarget(107), 1, 70);
 
  intake.move_voltage(-12000);
 
@@ -103,17 +101,23 @@ void far(){
  drive.move(right, imuTarget(240), 1, 70);
  
  drive.addErrorFunc(5, LAMBDA(intake.move_voltage(12000)));
- drive.move(forward, 32, 1, 80);
+ drive.move(forward, 24, 1, 100);
+ 
+ moveDriveTrain(12000, 0.3);
+ 
+ pros::delay(100);
 
  moveDriveTrain(-12000, 0.3);
  
- drive.move(right, imuTarget(346), 1, 80);
+ drive.move(right, imuTarget(343), 1, 80);
 
- drive.move(forward, 44, 4, 100);
+ intake.move_voltage(0);
+
+ drive.move(forward, 42, 4, 100);
 
  drive.move(right, imuTarget(77), 1, 80);
 
- drive.move(forward, 28, 1, 100);
+ drive.move(forward, 26, 1, 100);
 
  runOnError.remove();
  onErrorVector.clear();
@@ -149,7 +153,7 @@ void HighFar(){
 
  intake.move_voltage(-12000);
 
- drive.move(forward, 48, 5, 80);
+ drive.move(forward, 47, 5, 80);
 
  drive.move(right, imuTarget(230), 1, 70);
 
@@ -180,8 +184,8 @@ void HighFar(){
 
  intake.move_voltage(12000);
 
- moveDriveTrain(12000, 0.45);
- moveDriveTrain(-12000, 0.3);
+ moveDriveTrain(12000, 0.6);
+ moveDriveTrain(-12000, 0.2);
 
  runOnError.remove();
  onErrorVector.clear();
@@ -275,8 +279,13 @@ void skills(){
  //sec1
  intakePis.set_value(true);
  imu.set_heading(318);
+
+ //drive.setPID(4);
+ //drive.swerve(backwardRight, 26, imuTarget(5), 2, 85, 100);
+
  drive.setPID(4);
- drive.swerve(backwardRight, 26, imuTarget(5), 2, 85, 100);
+ drive.addErrorFunc(8, LAMBDA(drive.setMaxVelocity(95)));
+ drive.swerve(backwardRight, 26, imuTarget(0),2,35,100);
  
  drive.setPID(2);
  drive.move(forward, 4, 1, 70);
@@ -289,8 +298,7 @@ void skills(){
  
  
  drive.setCustomPID(50,0,2,0,160,0,85);
- drive.move(forward, 4, 2, 20);
-
+ drive.move(forward, 7, 2, 20);
 
  //shoot match loads 
  puncher.move_voltage(10000);
