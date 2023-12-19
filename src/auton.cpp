@@ -301,8 +301,8 @@ void skills(){
  drive.move(forward, 7, 2, 20);
 
  //shoot match loads 
- puncher.move_voltage(10000);
- pros::delay(34000);
+ puncher.move_voltage(12000);
+ pros::delay(30000);
  puncher.move_voltage(0);
  
  puncher.move_voltage(8000);

@@ -68,7 +68,7 @@ void opcontrol(){
  bool wingTog = true;
  bool intakePisTog = false;
  bool liftTog = false;
- //hangPis.set_value(false);
+ bool punchTog = true;
  intakePis.set_value(true);
  setBrakeMode(MOTOR_BRAKE_COAST);
  puncher.set_brake_mode(MOTOR_BRAKE_COAST);
@@ -127,8 +127,8 @@ void opcontrol(){
 	 if (!liftTog) {hangPis.set_value(false);}
 	 else {hangPis.set_value(true);}
 	 
-	 if (controller.get_digital(DIGITAL_R1)) { puncher.move_voltage(10000);}
-	 else if (controller.get_digital(DIGITAL_R2)) {puncher.move_voltage(12000);}
+	 if(controller.get_digital_new_press(DIGITAL_R1)){ punchTog = !punchTog; }
+	 if (!punchTog) {puncher.move_voltage(12000);}
 	 else {puncher.move_voltage(0);}
 	}
 } 
