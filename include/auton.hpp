@@ -2,11 +2,9 @@
 void close();
 void far();
 
-void closeBarTouch();
-void HighFar();
-
-void closeRush();
 void farRush();
+void closeElims();
 
 void skills();
+void skillsDriver();
 void nothing();

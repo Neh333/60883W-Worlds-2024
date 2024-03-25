@@ -16,15 +16,16 @@ extern pros::Motor frontleft;
 extern pros::Motor midleft;
 extern pros::Motor backleft;
 
-extern pros::Motor puncher;
+extern pros::MotorGroup leftMotors;
+extern pros::MotorGroup rightMotors;
+
+extern pros::Motor hang;
 extern pros::Motor intake;
 
 //Declare V5 sensors
-extern pros::Rotation puncherR;
 extern pros::Imu imu;
-extern pros::Vision vison;
+extern pros::Rotation hangRot;
 
-//pistions
-extern pros::ADIDigitalOut intakePis;
-extern pros::ADIDigitalOut wingPis;
-extern pros::ADIDigitalOut hangPis;
+//ADI Digital Out Devices 
+extern pros::ADIDigitalOut backWings;
+extern pros::ADIDigitalOut frontWings;

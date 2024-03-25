@@ -5,26 +5,28 @@
 //define controller
 pros::Controller controller(CONTROLLER_MASTER);
 
-//Deefine motors
-pros::Motor frontright(20 ,false);
-pros::Motor midright(10, false);
-pros::Motor backright(8, true);
+//Drive train objects 
+pros::Motor frontleft (18, true);
+pros::Motor midleft   (19, true);
+pros::Motor backleft  (20, true);
 
-pros::Motor frontleft(12, true);
-pros::Motor midleft(1, true);
-pros::Motor backleft(2, false);
+pros::Motor frontright(13, false);
+pros::Motor midright  (12, false);
+pros::Motor backright (11, false);
 
-pros::Motor puncher(5, false);
-
-pros::Motor intake(7, true);
+pros::MotorGroup leftMotors ({frontleft,midleft,backleft});
+pros::MotorGroup rightMotors ({frontright, midright, backright});
 
 //Define V5 sensorss
 pros::Imu imu(17);
 
-pros::Rotation puncherR(3);
-pros::Vision vison(14);
+//Motors
+pros::Motor intake(6);
+pros::Motor hang(4,true);
 
-//pistions
-pros::ADIDigitalOut wingPis('F');
-pros::ADIDigitalOut intakePis('G');
-pros::ADIDigitalOut hangPis('H');
+//rotation sensor 
+pros::Rotation hangRot(9,true);
+
+//ADI Digital Out Devices 
+pros::ADIDigitalOut backWings('G');
+pros::ADIDigitalOut frontWings('A');
