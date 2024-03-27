@@ -13,57 +13,81 @@ std::vector<errorFuncTuple> onErrorVector;
 *  run turn velo 70 or lower
 *  run gen lat 100
 *  make sure movment has a big enough timeout 
-*  Use hardstops when possible 
 */
 void close(){
- //drive.move(forward, 24, 1, 100);
- //drive.setScheduledConstants(PIDConstants[1]);
- //drive.setScheduleThreshold_a(50);
+  //run on error task
+  pros::Task runOnError(onError_fn);
+  
+  //set scheduling attributes 
+  drive.setScheduledConstants(PIDConstants[1]);
+  drive.setScheduleThreshold_a(30);
+  drive.setScheduleThreshold_l(10);
+  
+  //fling pre load
+  frontWings.set_value(true);
 
- drive.turn(right, 65, 1, 70);
- pros::delay(1000);
- 
- /*
- drive.turn(right, 80, 1, 70);
- pros::delay(1000);
+  //start running intake and drop it
+  intake.move_voltage(-12000);
+  hang.move_voltage(-12000);
 
-  drive.turn(right, 95, 1, 70);
-  pros::delay(1000);
+  drive.addErrorFunc(48, LAMBDA(hang.move_voltage(0)));
+  drive.addErrorFunc(48, LAMBDA(frontWings.set_value(false)));
+  drive.move(forward, 50, 2, 100);
+  
+  //turn to push over 
+  drive.turn(right, imuTarget(95), 1, 70);
 
-  drive.turn(right, 115, 2, 70);
-  pros::delay(1000);
+  frontWings.set_value(true);
+  
+  //push over
+  drive.move(forward, 23, 1, 100);
 
-  drive.turn(right, 130, 2, 70);
-  pros::delay(1000);
+  frontWings.set_value(false);
 
-  drive.turn(right, 145, 2, 70);
-  pros::delay(1000);
+  //line up for swerve
+  drive.setPID(4);
+  drive.hardStopSwerve(backwardLeft,  38, 72, imuTarget(50), 100, 95);
+  
+  //go to match laod bar
+  drive.setPID(5);
+  drive.swerve(backwardRight, 24, imuTarget(130), 2,  95, 100);
 
-  drive.turn(right, 160, 2, 70);
-  pros::delay(1000);
+  backWings.set_value(true);
 
-  drive.turn(right, 175, 2, 70);
-  pros::delay(1000);
+  //remove match load from matchload zone
+  drive.setPID(3);
+  drive.turn(left, imuTarget(85), 1, 70);
+  
+  //score pre load
+  drive.setPID(5);
+  drive.swerve(backwardRight, 48, imuTarget(0), 2, 95, 100);
+  
+  //2nd pass over 
+  drive.moveDriveTrain(-12000, 0.3);
 
-  drive.turn(right, 190, 2, 70);
-  pros::delay(1000);
+  //go touch match load bar and push over 
+  intake.move_voltage(12000);
 
-  drive.turn(right, 205, 2, 70);
-  pros::delay(1000);
-
-  drive.turn(right, 220, 2, 70);
-  pros::delay(1000);
-
-  drive.turn(right, 235, 2, 70);
-  pros::delay(1000);
-
-  drive.turn(right, 250, 2, 70);
-  pros::delay(1000);
- */
+  //remove on error task and clear the on error vector
+  runOnError.remove();
+  onErrorVector.clear();
  
 }
 
 void far(){
+
+  drive.setPID(1);
+  drive.setScheduledConstants(PIDConstants[1]);
+  drive.setScheduleThreshold_l(10);
+   
+  drive.move(forward, 10, 2, 100);
+  pros::delay(1000);
+
+  drive.move(forward, 24, 2, 100);
+  pros::delay(1000);
+  
+  drive.move(forward, 48, 2, 100);
+  pros::delay(1000);
  
  
 }

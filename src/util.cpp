@@ -10,16 +10,11 @@ int signum(double x)
   return (x >= 0) - (x < 0);
 }
 
-/* Find the shortest distance between two angles */
-double distBetweenAngles(double targetAngle, double currentAngle)
-{
-    return std::remainder(targetAngle-currentAngle,360);
-}
 
 /* Find the shortest distance between current angle and a desired angle */
 double imuTarget(double target)
 {
-    return std::fabs(distBetweenAngles(target, imu.get_heading()));
+  return(fabs(fmod((target-imu.get_heading()+540),360) - 180));
 }
 
 /*

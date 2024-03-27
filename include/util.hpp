@@ -3,7 +3,6 @@
 #define LAMBDA(func) [](){func;}
 
 int signum(double x);
-double distBetweenAngles(double targetAngle, double currentAngle);
 
 double inchToTick(double inch);
 double tickToInch(double tick);

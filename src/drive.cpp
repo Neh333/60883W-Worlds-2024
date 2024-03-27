@@ -192,7 +192,7 @@ double Drive::updatePID(double KP, double KI, double KD, double error, double la
   return KP*error + KI*integral + KD*derivative;
 }
 
-double Drive::updatePD(double KP, double KI, double KD, double error, double lastError)
+double Drive::updatePD(double KP, double KD, double error, double lastError)
 {
   const double derivative = error - lastError;
 
@@ -208,6 +208,7 @@ double Drive::updatePD(double KP, double KI, double KD, double error, double las
 double Drive::move(Direction dir, double target, double timeOut, double maxVelocity){
   /* Error values */
   double lastError;
+  double errorDrift;
   double proportionDrift;
   const double initialHeading = imu->get_heading();
   const double initialMotorAvg = driveAvgPos();
@@ -257,7 +258,8 @@ double Drive::move(Direction dir, double target, double timeOut, double maxVeloc
     lastError = error;
   
     /* Calculate the product of heading drift and kP_d */
-    proportionDrift = distBetweenAngles(initialHeading, imu->get_heading()) * kP_d;
+    errorDrift = fmod((initialHeading-(imu->get_heading())+540),360) - 180;
+    proportionDrift = errorDrift * kP_d;
 
     /* Move Drivetrain */
     moveRightDriveVoltage((reverseVal*finalVolt)+proportionDrift);
@@ -288,7 +290,7 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
   maxVolt_a = percentToVoltage(maxVelocity);
   double finalVolt;
   /* Drive output multiplier */
-  int8_t reverseVal = (dir == right)?(-1):(1);
+  int8_t reverseVal = (dir == right)?(1):(-1);
   /* Standstill variable declarations */
   uint8_t standStillCount = 0;
   bool standStill = false;
@@ -296,7 +298,7 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
   /* Change the reverseVal and target if the direction input is shortest */
   if(dir == shortest)
   {
-    target = distBetweenAngles(target, imu->get_heading());
+    target = fabs(fmod((target-imu->get_heading()+540),360) - 180);
     reverseVal = signum(target);
     target = fabs(target);
   }
@@ -348,8 +350,9 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
 
  
 double Drive::hardStop(Direction dir, double targetCutOff, double target, double maxVelocity){
-   float proportionDrift;
-   float lastError;
+   double errorDrift;
+   double proportionDrift;
+   double lastError;
    const double initialHeading = imu->get_heading();
    const double initialMotorAvg = driveAvgPos();
    const double tickTarget = inchToTick(target);
@@ -359,7 +362,7 @@ double Drive::hardStop(Direction dir, double targetCutOff, double target, double
    double myKP = kP, myKI = kI, myKD = kD;
    //Motor output var declarations//
    maxVolt = percentToVoltage(maxVelocity);
-   float finalVolt;
+   double finalVolt;
  
    //Forward Backward movement multipliers
    const int8_t reverseVal = dir == backward ? 1: -1;
@@ -378,13 +381,14 @@ double Drive::hardStop(Direction dir, double targetCutOff, double target, double
      error = tickTarget - fabs(driveAvgPos() - initialMotorAvg);
     
      //update the PD values
-     updatePD(kP, kI, kD, error, lastError);
+     updatePD(kP, kD, error, lastError);
      
      //print error value for tuning
-     controller.print(2,0, "Error: %.2f", error);
+     controller.print(2,0, "Error: %.2f", tickToInch(error));
      
      /* Calculate the product of heading drift and kP_d */
-     proportionDrift = distBetweenAngles(initialHeading, imu->get_heading()) * kP_d;
+     errorDrift = fmod((initialHeading-imu->get_heading()+540),360) - 180;
+     proportionDrift = errorDrift * kP_d;
 
      //Set Drivetrain
      moveRightDriveVoltage((reverseVal*finalVolt)+proportionDrift);
@@ -410,6 +414,7 @@ double Drive::swerve(Direction dir, double target, double target_a, double timeO
   double lastError_a;
   const double initialMotorAvg = driveAvgPos();
   const double tickTarget = inchToTick(target);
+  const double initialAngle = imu->get_rotation() + 360;
   /* Integral declarations */
   double integral = 0;
   double integral_a = 0;
@@ -421,12 +426,12 @@ double Drive::swerve(Direction dir, double target, double target_a, double timeO
   double finalVoltRight;
   /* Drive output multipliers */
   const int8_t reverseVal = (dir == backwardLeft || dir == backwardRight || dir == backwardShortest)?(-1):(1);
-  int8_t reverseVal_a = (dir == backwardRight || dir == forwardRight)?(-1):(1);
+  int8_t reverseVal_a = (dir == backwardRight || dir == forwardRight)?(1):(-1);
 
   /* Change the reverseVal and target if the direction input is shortest */
   if(dir == forwardShortest || dir == backwardShortest)
   {
-    target_a = distBetweenAngles(target_a, imu->get_heading());
+    target_a = fabs(fmod((target-imu->get_heading()+540),360) - 180);
     reverseVal_a = signum(target_a);
     target_a = fabs(target_a);
   }
@@ -461,10 +466,13 @@ double Drive::swerve(Direction dir, double target, double target_a, double timeO
     finalVoltLeft = reverseVal*workingVolt;
     /********************************************TURN****************************************************/
     /* Update error, do actual PID calculations, adjust for slew, and clamp the resulting value */
-    error_a = distBetweenAngles(target_a, imu->get_heading());
+    error_a = target_a - fabs(imu->get_rotation() + 360 - initialAngle);
     workingVolt = updatePID(kP_a, kI_a, kD_a, error_a, lastError_a, integral_a, integralActive_a);
     calculateSlew(&workingVolt, actualVelocityLeft() - actualVelocityRight(), &slewProf_a);
     workingVolt = std::clamp(workingVolt, -maxVolt_a, maxVolt_a);
+
+    //print error value for tuning
+    controller.print(2,0, "Error: %.2f", tickToInch(error));
 
     /* Calculate standstill */
     updateStandstill(lateral, standStill_a, error_a, lastError_a, standStillCount_a);
@@ -502,6 +510,7 @@ double Drive::hardStopSwerve(Direction dir, double targetCutOff, double target, 
  const double initialMotorAvg = driveAvgPos();
  const double tickTarget = inchToTick(target);
  const double tickTargetCutOff = inchToTick(targetCutOff);
+ const double initialAngle = imu->get_rotation() + 360;
 
  /* Integral declarations */
  double integral = 0;
@@ -515,13 +524,13 @@ double Drive::hardStopSwerve(Direction dir, double targetCutOff, double target, 
 
  /* Drive output multipliers */
  const int8_t reverseVal = (dir == backwardLeft || dir == backwardRight || dir == backwardShortest)?(-1):(1);
- int8_t reverseVal_a = (dir == backwardRight || dir == forwardRight)?(-1):(1);
+ int8_t reverseVal_a = (dir == backwardRight || dir == forwardRight)?(1):(-1);
  const bool isShortest = (dir == forwardShortest || dir == backwardShortest)?(true):(false);
 
  /* Change the reverseVal and target if the direction input is shortest */
  if(dir == forwardShortest || dir == backwardShortest)
   {
-   target_a = distBetweenAngles(target_a, imu->get_heading());
+   target_a = fabs(fmod((target-imu->get_heading()+540),360) - 180);
    reverseVal_a = signum(target_a);
    target_a = fabs(target_a);
   }
@@ -536,7 +545,7 @@ double Drive::hardStopSwerve(Direction dir, double targetCutOff, double target, 
  while (tickTargetCutOff > fabs(driveAvgPos()-initialMotorAvg)) {
      /* Update error, do actual PID calculations, adjust for slew, and clamp the resulting value */
      error = tickTarget - fabs(driveAvgPos() - initialMotorAvg);
-     workingVolt = updatePD(kP, kI, kD, error, lastError);
+     workingVolt = updatePD(kP, kD, error, lastError);
      calculateSlew(&workingVolt, actualVelocityAll(), &slewProf);
      workingVolt = std::clamp(workingVolt, -maxVolt, maxVolt);
     
@@ -548,8 +557,8 @@ double Drive::hardStopSwerve(Direction dir, double targetCutOff, double target, 
 
      /********************************************TURN****************************************************/
      /* Update error, do actual PID calculations, adjust for slew, and clamp the resulting value */
-     error_a = distBetweenAngles(target_a, imu->get_heading());
-     workingVolt = updatePID(kP_a, kI_a, kD_a, error_a, lastError_a, integral_a, integralActive_a);
+     error_a = target_a - fabs(imu->get_rotation() + 360 - initialAngle);
+     workingVolt = updatePD(kP_a, kD_a, error_a, lastError_a);
      calculateSlew(&workingVolt, actualVelocityLeft() - actualVelocityRight(), &slewProf_a);
      workingVolt = std::clamp(workingVolt, -maxVolt_a, maxVolt_a);
 
@@ -574,6 +583,24 @@ double Drive::hardStopSwerve(Direction dir, double targetCutOff, double target, 
    return tickToInch(error);
   }
 
+  
+/* Actively halt robot movement for timeOut seconds */
+double Drive::brake(double timeOut)
+{
+  const double target = driveAvgPos();
+  const double kP_brake = 30;
+  const uint32_t endTime = pros::millis() + timeOut*1000;
+
+  while(pros::millis() < endTime)
+  {
+      error = target - driveAvgPos();
+      moveDriveVoltage(error*kP_brake);
+      pros::delay(20);
+  }
+
+  return tickToInch(error);
+}
+
 
 /*********************************************************************************************************/
 //Getters 
@@ -589,7 +616,7 @@ const bool Drive::getPIDStatus(){
 //Drive methods 
 double Drive::leftDriveAvgPos(){
   double value = 0;
-  for (int i = 0; i<(leftMotors->size()-1); i++) {
+  for (int i = 0; i<(leftMotors->size()); i++) {
     value += this->leftMotors->get_positions().at(i);
   }
   return value/leftMotors->size();
@@ -597,7 +624,7 @@ double Drive::leftDriveAvgPos(){
 
 double Drive::rightDriveAvgPos(){
    double value = 0;
-   for (int i = 0; i<(rightMotors->size()-1); i++) {
+   for (int i = 0; i<(rightMotors->size()); i++) {
     value += this->rightMotors->get_positions().at(i);
   }
   return value/rightMotors->size();

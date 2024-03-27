@@ -3,7 +3,7 @@
 #include "util.hpp"
 
 
-#define INTEGRAL_MAX 200.0
+#define INTEGRAL_MAX 28.0
 #define NO_SCHEDULING -1.f
 
 enum Direction{
@@ -35,6 +35,8 @@ struct errorFuncTuple
   errorFuncTuple(std::function<void()> func, double onError, bool called): func(func), onError(onError), called(called){}
 };
 
+void onError_fn(void* param);
+
 struct PIDprofile
 {
   double kP;
@@ -44,7 +46,6 @@ struct PIDprofile
   double kD;
   double kD_a;
   double kP_d;
-  double kP_s;
 };
 
 struct slewProfile
@@ -55,19 +56,22 @@ struct slewProfile
 };
 
 // Initialize PID Values
+//indexs 0-5
+//set PID uses 1-6
  const PIDprofile PIDConstants[6] = {
- /*{kP, kPt,  kI, kIt, kD,  kDt,  kPd}*/
-   {0,  130,   0,   0,  0,  200,    0}, //
+ /*{kP, kPa, kI, kIa, kD,  kDa,  kPd}*/
+   {17, 193,  0,   0,  0,   22,  116},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
 
-   {0,  40,   0,   0,  0,  570,    0}, //
+   {24, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
+    scheduled lat profile starting at 10 inches of error**/
 
-   {49, 215,  1,   90, 250, 670,    0}, //
- 
-   {31,  30,  3,   0,  140,  160,   0}, //
+   {24,  189,  0,  0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
+   
+   /***********SWERVES**************/
+   
+   {17,  200,  0,  0, 50,   20,    0},/*1st close swerve BL*/
 
-   {64, 148,  3,   0,  240,  240,   0}, //
-
-   {26, 175,  0,   0,  220,  160,   0}, //
+   {18,  336,  0,  0, 52,  800,    0} /*2nd close swerve BR*/
 };
 
 class Drive{
@@ -102,7 +106,7 @@ class Drive{
   //PID updater methods 
   double updatePID(double KP, double KI, double KD, double error, double lastError, double &integral, 
                  double integralActive);
-  double updatePD(double KP, double KI, double KD, double error, double lastError);
+  double updatePD(double KP, double KD, double error, double lastError);
   void updateIntegral(double error, double lastError, double activeDistance, double& integral);
   void updateStandstill(movement_Type type, bool& standStill, double error, double lastError,
                          uint8_t& standStillCount);
@@ -191,6 +195,8 @@ class Drive{
   //Hardstop swerve fn for PID motion chaining 
   double hardStopSwerve(Direction dir, double targetCutOff, double target, double target_a,
                          double maxVel, double maxVel_a);
+
+  double brake(double timeOut);
 };
 
 extern Drive drive;

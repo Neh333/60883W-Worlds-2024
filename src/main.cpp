@@ -24,7 +24,7 @@ void initialize(){
 	initBarGraph();
 	pros::Task brainDisplayTask(updateBarGraph_fn);
 	drive.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
-  hang.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  hang.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	imu.reset();
 	if(imu.get_heading() || imu.get_rotation() > 0.5){
 		imu.reset(); 
@@ -87,6 +87,7 @@ void arcade_standard(double curve) {
  // Set robot to l_stick and r_stick, check joystick threshold, set active brake
  set_tank(fwd_stick + turn_stick, fwd_stick - turn_stick);
 }
+
 
 Hang hangPID;
 
@@ -152,9 +153,9 @@ void opcontrol() {
      else if(controller.get_digital_new_press(DIGITAL_A)){
                 hangPID.target = liftTargets[2];
             }
-     if (controller.get_digital(DIGITAL_X)){hang.move_voltage(12000);}
-     else if (controller.get_digital(DIGITAL_B)) {hang.move_voltage(-12000);}
-     else {hang.move_velocity(0);}   
+     //if (controller.get_digital(DIGITAL_X)){hang.move_voltage(12000);}
+     //else if (controller.get_digital(DIGITAL_B)) {hang.move_voltage(-12000);}
+     //else {hang.move_velocity(0);}   
 
   
      //hangPID.PID();
