@@ -60,15 +60,15 @@ struct slewProfile
 //set PID uses 1-6
  const PIDprofile PIDConstants[6] = {
  /*{kP, kPa, kI, kIa, kD,  kDa,  kPd}*/
-   {17, 193,  0,   0,  0,   22,  116},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
+   {17, 193,  0,   0,  0,   22,  100},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
 
-   {24, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
+   {20, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
     scheduled lat profile starting at 10 inches of error**/
 
    {24,  189,  0,  0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
    
    /***********SWERVES**************/
-   
+
    {17,  200,  0,  0, 50,   20,    0},/*1st close swerve BL*/
 
    {18,  336,  0,  0, 52,  800,    0} /*2nd close swerve BR*/
@@ -195,7 +195,8 @@ class Drive{
   //Hardstop swerve fn for PID motion chaining 
   double hardStopSwerve(Direction dir, double targetCutOff, double target, double target_a,
                          double maxVel, double maxVel_a);
-
+  
+  //P Based brake loop
   double brake(double timeOut);
 };
 

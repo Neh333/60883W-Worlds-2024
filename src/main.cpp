@@ -145,23 +145,26 @@ void opcontrol() {
      *TO DO: Test and Debug
      **/
      if(controller.get_digital_new_press(DIGITAL_X)){
+                enganged = !enganged;
                 hangPID.target = liftTargets[0];
             }
-     else if(controller.get_digital_new_press(DIGITAL_Y)){
+     else if(controller.get_digital_new_press(DIGITAL_A)){
+                enganged = !enganged;
                 hangPID.target = liftTargets[1];
             }
-     else if(controller.get_digital_new_press(DIGITAL_A)){
-                hangPID.target = liftTargets[2];
-            }
+     if(enganged){
+        hang.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        hang.move_voltage(0);
+     }
+     if (!enganged) {
+       hang.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+       hangPID.PID();
+     }
+
      //if (controller.get_digital(DIGITAL_X)){hang.move_voltage(12000);}
      //else if (controller.get_digital(DIGITAL_B)) {hang.move_voltage(-12000);}
      //else {hang.move_velocity(0);}   
 
-  
-     //hangPID.PID();
-
      pros::delay(20);
-
-     printf("%i\n", errno);
     }
 }

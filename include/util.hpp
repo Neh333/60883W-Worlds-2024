@@ -55,13 +55,13 @@ void findTri(Triangle& obj, double a, double reference_a);
 #define LIFT_OVER_MOGO_HEIGHT 279
 
 //Global Variable Declaration
-#define LIFTVALSIZE 3                  /*H, V  , D*/
-const float liftTargets[LIFTVALSIZE] = {92, 170, 0}; 
+#define LIFTVALSIZE 2                  /*H, V */
+const float liftTargets[LIFTVALSIZE] = {92, 170}; 
 
 class Hang{
  private:
   //Initialize PID Values
-  const float kP = 70;
+  const float kP = 30;
   const float kI = 0;
   const float kD = 100;
   const float intergralActive = 2;
@@ -74,7 +74,7 @@ class Hang{
     
  public:
   uint8_t targetIndicator = 0;
-  float target = liftTargets[2];
+  float target;
   void PID();
   void waitUntilTargetReached(float timeOut);
   void setTarget(int n);

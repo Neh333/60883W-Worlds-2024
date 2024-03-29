@@ -81,12 +81,20 @@ void Hang::PID(){
     lastError = error;
     if(error == 0){derivative = 0;}
 
-    int finalVolt = kP*proportion + kI*intergral + kD*derivative;
+    double finalVolt;
+
+    if(abs(error)>target-10) {
+		 finalVolt = error*12000;
+	  }
+    
+    else {
+     finalVolt = kP*proportion + kI*intergral + kD*derivative;
+    }
 
     //Set finalVolt to range
-    finalVolt = std::clamp(finalVolt, -12000, 12000);
+    finalVolt = std::clamp(finalVolt, -12000.0, 12000.0);
 
-    //master.print(2,0,"%.2f, %.0f                ", error, target);
+    controller.print(2, 0, "Error: %.2f", error);
 
     //Set final hang speeds
     hang.move_voltage(finalVolt);

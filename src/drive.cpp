@@ -283,7 +283,7 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
   const double initialAngle = imu->get_rotation() + 360;
   /* Scheduling variables */
   bool scheduled = (scheduleThreshold_a == NO_SCHEDULING);
-  double myKP = kP_a, myKI = kI_a, myKD = kD_a;
+  double myKP = this->kP_a, myKI = this->kI_a, myKD = this->kD_a;
   /* Integral definition */
   double integral = 0;
   /* Motor output variable declarations */
@@ -309,7 +309,6 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
 
   /* Begin PID */
   while((pros::millis() < endTime && !standStill)){
-        /* Maybe schedule constants */
     if(!scheduled && fabs(error) < scheduleThreshold_a)
     {
       myKP = scheduledConstants.kP_a;
