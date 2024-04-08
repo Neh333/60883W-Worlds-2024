@@ -30,3 +30,11 @@ pros::Rotation hangRot(9,true);
 //ADI Digital Out Devices 
 pros::ADIDigitalOut backWings('G');
 pros::ADIDigitalOut frontWings('A');
+pros::ADIDigitalOut hangLock('H');
+
+//toggle vars
+bool backWingTog = true;
+bool frontWingTog = true;
+bool hangRachet = true;
+bool fn_Lock= true;
+ 

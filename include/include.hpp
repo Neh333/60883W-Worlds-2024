@@ -29,3 +29,11 @@ extern pros::Rotation hangRot;
 //ADI Digital Out Devices 
 extern pros::ADIDigitalOut backWings;
 extern pros::ADIDigitalOut frontWings;
+extern pros::ADIDigitalOut hangLock;
+
+//toggle vars
+extern bool backWingTog;
+extern bool frontWingTog;
+extern bool hangRachet;
+extern bool fn_Lock;
+ 

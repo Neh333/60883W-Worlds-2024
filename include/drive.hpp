@@ -60,7 +60,7 @@ struct slewProfile
 //set PID uses 1-6
  const PIDprofile PIDConstants[6] = {
  /*{kP, kPa, kI, kIa, kD,  kDa,  kPd}*/
-   {17, 193,  0,   0,  0,   22,  100},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
+   {17, 193,  0,   0,  0,   22,    0},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
 
    {20, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
     scheduled lat profile starting at 10 inches of error**/
@@ -69,9 +69,9 @@ struct slewProfile
    
    /***********SWERVES**************/
 
-   {17,  200,  0,  0, 50,   20,    0},/*1st close swerve BL*/
+   {17,  190,  0,  0, 50,   20,    0},/*1st close swerve BL*/
 
-   {18,  336,  0,  0, 52,  800,    0} /*2nd close swerve BR*/
+   {18,  210,  0,  0, 52,  800,    0} /*las close swerve FL*/
 };
 
 class Drive{

@@ -1,5 +1,6 @@
 #include "auton.hpp"
 #include "drive.hpp"
+#include "pros/misc.h"
 #include "pros/motors.h"
 #include "util.hpp"
 #include "include.hpp"
@@ -92,10 +93,6 @@ void arcade_standard(double curve) {
 Hang hangPID;
 
 void opcontrol() {
- bool backWingTog = true;
- bool frontWingTog = true;
- bool enganged = true;
- 
  while (true) {
      //AUTO SELECTOR
      //Display current autonomous on the controller
@@ -123,47 +120,44 @@ void opcontrol() {
      
      if (controller.get_digital(DIGITAL_L1)){intake.move_voltage(-12000);}
      else if (controller.get_digital(DIGITAL_L2)) {intake.move_voltage(12000);}
-     else {intake.move_velocity(0);}   
+     else {intake.move_velocity(0);}  
 
-     if(controller.get_digital_new_press(DIGITAL_R1)){ backWingTog = !backWingTog; }
-     if (!backWingTog) {
-       backWings.set_value(true);
-     }
-     else {
-      backWings.set_value(false);
-     }
-
-     if(controller.get_digital_new_press(DIGITAL_R2)){ frontWingTog = !frontWingTog; }
-     if (!frontWingTog) {
-       frontWings.set_value(true);
-     }
-     else {
-      frontWings.set_value(false);
-     }
+     if(controller.get_digital_new_press(DIGITAL_A)){
+        fn_Lock = !fn_Lock;
+      }
      
-     /*HANG CONTROL
-     *TO DO: Test and Debug
-     **/
-     if(controller.get_digital_new_press(DIGITAL_X)){
-                enganged = !enganged;
-                hangPID.target = liftTargets[0];
-            }
-     else if(controller.get_digital_new_press(DIGITAL_A)){
-                enganged = !enganged;
-                hangPID.target = liftTargets[1];
-            }
-     if(enganged){
-        hang.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-        hang.move_voltage(0);
-     }
-     if (!enganged) {
+     if(fn_Lock){
+       if(controller.get_digital_new_press(DIGITAL_R1)){ backWingTog = !backWingTog; }
+       if (!backWingTog) {
+         backWings.set_value(true);
+       }
+       else {
+        backWings.set_value(false);
+       }
+     
+       if(controller.get_digital_new_press(DIGITAL_R2)){ frontWingTog = !frontWingTog; }
+       if (!frontWingTog) {
+         frontWings.set_value(true);
+       }
+       else {
+        frontWings.set_value(false);
+       }
+     } 
+ 
+     else {
        hang.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-       hangPID.PID();
+       if (controller.get_digital(DIGITAL_R2)){hang.move_voltage(-12000);}
+       else if (controller.get_digital(DIGITAL_R1)) {hang.move_voltage(12000);}
+       else {hang.move_velocity(0);}   
      }
 
-     //if (controller.get_digital(DIGITAL_X)){hang.move_voltage(12000);}
-     //else if (controller.get_digital(DIGITAL_B)) {hang.move_voltage(-12000);}
-     //else {hang.move_velocity(0);}   
+      if(controller.get_digital_new_press(DIGITAL_Y)){ hangRachet = !hangRachet; }
+       if (!hangRachet) {
+         hangLock.set_value(true);
+       }
+       else {
+        hangLock.set_value(false);
+       }
 
      pros::delay(20);
     }
