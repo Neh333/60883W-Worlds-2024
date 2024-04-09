@@ -65,7 +65,7 @@ struct slewProfile
    {20, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
     scheduled lat profile starting at 10 inches of error**/
 
-    //also small movments??
+    //also small movments?? (test more, might explain slight inconsistinces)
 
    {24,  189,  0,  0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
    
