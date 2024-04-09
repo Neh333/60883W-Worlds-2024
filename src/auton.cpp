@@ -109,6 +109,87 @@ void close(){
 }
 
 void far(){
+  //fling pre load
+  backWings.set_value(true);
+
+  //run on error task
+  pros::Task runOnError(onError_fn);
+  
+  //set scheduling attributes 
+  drive.setScheduledConstants(PIDConstants[1]);
+  drive.setScheduleThreshold_a(30);
+  drive.setScheduleThreshold_l(10);
+
+  //start running intake and drop it
+  intake.move_voltage(-12000);
+  hang.move_voltage(-12000);
+
+  //let wing extend 
+  pros::delay(80);
+
+  drive.setPID(4); 
+  drive.addErrorFunc(22, LAMBDA(hang.move_voltage(0)));
+  drive.addErrorFunc(20, LAMBDA(backWings.set_value(false)));
+  drive.swerve(backwardLeft, 32, imuTarget(0), 2, 100, 80);
+
+  //2nd pass over 
+  drive.moveDriveTrain(-12000, 0.3);
+  
+  //get ball under elavation bar  
+  drive.setPID(5);
+  drive.swerve(forwardRight, 62, imuTarget(90), 2, 90, 75);
+   
+  //go get safe ball
+  drive.setPID(1);
+  drive.move(backward, 24, 1, 100);
+  
+  //x-take triball
+  drive.addErrorFunc(2, LAMBDA(intake.move_voltage(12000)));
+  drive.turn(right, imuTarget(180), 1, 70);
+  
+  //revrese intake
+  intake.move_voltage(-12000);
+  
+  //get safeball
+  drive.setPID(4);
+  drive.swerve(forwardLeft, 42, imuTarget(130), 2, 80, 75);
+
+  //go get autoline ball
+  drive.setScheduleThreshold_l(NO_SCHEDULING);
+  drive.setPID(2);
+  drive.move(backward, 4, 1, 100);
+
+  drive.setPID(1);
+  drive.turn(right, imuTarget(220), 1, 70);
+
+  //xtake safe ball 
+  intake.move_voltage(12000);
+
+  //line up to get auton ball on bar
+  drive.setScheduleThreshold_l(10);
+  drive.move(forward, 16, 1, 100);
+
+  drive.turn(left, imuTarget(131), 1, 70);
+
+  //get auton ball on bar
+  drive.move(forward, 14, 1, 100);
+  
+  //open front wings 
+  frontWings.set_value(true);
+
+  drive.turn(right, imuTarget(270), 1, 70);
+  
+  //score all 4 triballs 
+  drive.move(forward, 32, 2, 100);
+
+  //back up as to not be touching
+  drive.setScheduleThreshold_a(NO_SCHEDULING);
+  drive.setPID(3);
+  drive.move(backward, 6, 1, 100);
+  
+  //remove on error task and clear the on error vector
+  runOnError.remove();
+  onErrorVector.clear();
  
 }
 

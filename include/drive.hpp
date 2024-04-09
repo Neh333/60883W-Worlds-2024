@@ -65,13 +65,17 @@ struct slewProfile
    {20, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
     scheduled lat profile starting at 10 inches of error**/
 
+    //also small movments??
+
    {24,  189,  0,  0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
    
    /***********SWERVES**************/
 
-   {17,  190,  0,  0, 50,   20,    0},/*1st close swerve BL*/
+   {17,  190,  0,  0, 50,   20,    0},/*first close swerve BL*/
 
-   {18,  210,  0,  0, 52,  800,    0} /*las close swerve FL*/
+   {18,  210,  0,  0, 52,  800,    0},/*last close swerve FL*/
+
+   {18,  210,  0,  0, 52,  800,    0} /*far quals side elevation swerve*/
 };
 
 class Drive{
