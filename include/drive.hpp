@@ -62,12 +62,12 @@ struct slewProfile
  /*{kP, kPa, kI, kIa, kD,  kDa,  kPd}*/
    {17, 193,  0,   0,  0,   22,    0},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
 
+   {24,  189,  0,  0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
+
+   /***********Scheduled**************/
+
    {20, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
     scheduled lat profile starting at 10 inches of error**/
-
-    //also small movments?? (test more, might explain slight inconsistinces)
-
-   {24,  189,  0,  0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
    
    /***********SWERVES**************/
 
@@ -75,7 +75,7 @@ struct slewProfile
 
    {18,  210,  0,  0, 52,  800,    0},/*last close swerve FL*/
 
-   {18,  210,  0,  0, 52,  800,    0} /*far quals side elevation swerve*/
+   {18,  158, 0,  0, 60,   801,    0} /*far quals side elevation swerve*/
 };
 
 class Drive{
