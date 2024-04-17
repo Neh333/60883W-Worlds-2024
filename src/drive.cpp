@@ -192,15 +192,6 @@ double Drive::updatePID(double KP, double KI, double KD, double error, double la
   return KP*error + KI*integral + KD*derivative;
 }
 
-double Drive::updatePD(double KP, double KD, double error, double lastError)
-{
-  const double derivative = error - lastError;
-
-  return KP*error + KD*derivative;
-}
-  
-  
-
 /*********************************************************************************************************/
 //Movement Functions
  
@@ -215,7 +206,7 @@ double Drive::move(Direction dir, double target, double timeOut, double maxVeloc
   const double tickTarget = inchToTick(target);
   /* Scheduling variables */
   bool scheduled = (scheduleThreshold_l == NO_SCHEDULING);
-  double myKP = kP, myKI = kI, myKD = kD;
+  double myKP = this->kP, myKI = this->kI, myKD = this->kD;
   /* Integral declaration */
   double integral = 0;
   /* Motor output variable declarations */
@@ -346,41 +337,41 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
   return error;
 }
 
-
- 
 double Drive::hardStop(Direction dir, double targetCutOff, double target, double maxVelocity){
-   double errorDrift;
-   double proportionDrift;
-   double lastError;
-   const double initialHeading = imu->get_heading();
-   const double initialMotorAvg = driveAvgPos();
-   const double tickTarget = inchToTick(target);
-   const double tickTargetCutOff = inchToTick(targetCutOff);
-   /* Scheduling variables */
-   bool scheduled = (scheduleThreshold_l == NO_SCHEDULING);
-   double myKP = kP, myKI = kI, myKD = kD;
-   //Motor output var declarations//
-   maxVolt = percentToVoltage(maxVelocity);
-   double finalVolt;
+  double errorDrift;
+  double proportionDrift;
+  double lastError;
+  const double initialHeading = imu->get_heading();
+  const double initialMotorAvg = driveAvgPos();
+  const double tickTarget = inchToTick(target);
+  const double tickTargetCutOff = inchToTick(targetCutOff);
+  /* Scheduling variables */
+  bool scheduled = (scheduleThreshold_l == NO_SCHEDULING);
+  double myKP = this->kP, myKI = this->kI, myKD = this->kD;
+  //Motor output var declarations//
+  maxVolt = percentToVoltage(maxVelocity);
+  double finalVolt;
  
-   //Forward Backward movement multipliers
-   const int8_t reverseVal = dir == backward ? 1: -1;
-   //Tell the onError task that a new PID has begun
-   isNewPID = true;
+  /* Drive output multiplier */
+  const int8_t reverseVal = (dir == backward)?(-1):(1);
+   
+  /*Tell the onError task that a new PID has begun*/
+  isNewPID = true;
 
-   //Begin PID
-   while(tickTargetCutOff > fabs(driveAvgPos()-initialMotorAvg)){
-        /* Maybe schedule constants */
-     if(!scheduled && fabs(error) < scheduleThreshold_l){
-       myKP = scheduledConstants.kP;
-       myKI = scheduledConstants.kI;
-       myKD = scheduledConstants.kD;
-       scheduled = true;
+  //Begin PID
+  while(tickTargetCutOff > fabs(driveAvgPos()-initialMotorAvg)){
+    /* Maybe schedule constants */
+    if(!scheduled && fabs(error) < scheduleThreshold_l){
+      myKP = scheduledConstants.kP;
+      myKI = scheduledConstants.kI;
+      myKD = scheduledConstants.kD;
+      scheduled = true;
      }
      error = tickTarget - fabs(driveAvgPos() - initialMotorAvg);
     
      //update the PD values
-     updatePD(kP, kD, error, lastError);
+     double zero = 0;
+     finalVolt = updatePID(myKP, 0, myKD, error, lastError, zero, 0);
      
      //print error value for tuning
      controller.print(2,0, "Error: %.2f", tickToInch(error));
@@ -395,13 +386,13 @@ double Drive::hardStop(Direction dir, double targetCutOff, double target, double
 
      //Give PROS time to keep itself in order
      pros::delay(20);
-    }
-    //Set voltage to 0 in case this is the last function called in an autonomous
-    moveDriveVoltage(0);
-    //Tell the onError task that the PID is over
-    isNewPID = false;
-    //Exit the function
-    return tickToInch(error);
+  }
+  //Set voltage to 0 in case this is the last function called in an autonomous
+  moveDriveVoltage(0);
+  //Tell the onError task that the PID is over
+  isNewPID = false;
+  //Exit the function
+  return tickToInch(error);
 }
 
 //TO DO: potentailly add scheduling 
@@ -497,91 +488,6 @@ double Drive::swerve(Direction dir, double target, double target_a, double timeO
   isNewPID = false;
   return tickToInch(error);
 }
-
-double Drive::hardStopSwerve(Direction dir, double targetCutOff, double target, double target_a,
-                              double maxVel, double maxVel_a){
- /* Error values */
- double error_a;
- double lastError;  
- double lastError_a;
-
- const double initialHeading = imu->get_heading();
- const double initialMotorAvg = driveAvgPos();
- const double tickTarget = inchToTick(target);
- const double tickTargetCutOff = inchToTick(targetCutOff);
- const double initialAngle = imu->get_rotation() + 360;
-
- /* Integral declarations */
- double integral = 0;
- double integral_a = 0;
- /* Motor output variable declarations */
- maxVolt = percentToVoltage(maxVel);
- maxVolt_a = percentToVoltage(maxVel_a);;
- double workingVolt;
- double finalVoltLeft;
- double finalVoltRight;
-
- /* Drive output multipliers */
- const int8_t reverseVal = (dir == backwardLeft || dir == backwardRight || dir == backwardShortest)?(-1):(1);
- int8_t reverseVal_a = (dir == backwardRight || dir == forwardRight)?(1):(-1);
- const bool isShortest = (dir == forwardShortest || dir == backwardShortest)?(true):(false);
-
- /* Change the reverseVal and target if the direction input is shortest */
- if(dir == forwardShortest || dir == backwardShortest)
-  {
-   target_a = fabs(fmod((target-imu->get_heading()+540),360) - 180);
-   reverseVal_a = signum(target_a);
-   target_a = fabs(target_a);
-  }
- 
- // Standstill variables//
- uint8_t standStillCount, standStillCount_a = 0;
- bool standStill, standStill_a = false;
- // Tell the onError task that a new PID has begun
- isNewPID = true;
-
- // Begin PID
- while (tickTargetCutOff > fabs(driveAvgPos()-initialMotorAvg)) {
-     /* Update error, do actual PID calculations, adjust for slew, and clamp the resulting value */
-     error = tickTarget - fabs(driveAvgPos() - initialMotorAvg);
-     workingVolt = updatePD(kP, kD, error, lastError);
-     calculateSlew(&workingVolt, actualVelocityAll(), &slewProf);
-     workingVolt = std::clamp(workingVolt, -maxVolt, maxVolt);
-    
-     /* Update lastError */
-     lastError = error;
-  
-     finalVoltRight = reverseVal*workingVolt;
-     finalVoltLeft = reverseVal*workingVolt;
-
-     /********************************************TURN****************************************************/
-     /* Update error, do actual PID calculations, adjust for slew, and clamp the resulting value */
-     error_a = target_a - fabs(imu->get_rotation() + 360 - initialAngle);
-     workingVolt = updatePD(kP_a, kD_a, error_a, lastError_a);
-     calculateSlew(&workingVolt, actualVelocityLeft() - actualVelocityRight(), &slewProf_a);
-     workingVolt = std::clamp(workingVolt, -maxVolt_a, maxVolt_a);
-
-     finalVoltRight += reverseVal_a*(-workingVolt);
-     finalVoltLeft += reverseVal_a*(workingVolt);
-
-     //controller.print(2,0,"%.2f ,%.2f ", tickToInch(error), error_a);
-     //controller.print(0, 0, "error_a: %.2f", error_a);
-
-     // Set drivetrain voltages
-     moveRightDriveVoltage(finalVoltRight);
-     moveLeftDriveVoltage(finalVoltLeft);
-
-     // Give the brain time to keep itself in order
-     pros::delay(20);
-    }
-   //Set voltage to 0 in case this is the last function called in an autonomous
-   moveDriveVoltage(0);
-   //Tell the onError task that the PID is over
-   isNewPID = false;
-   //Exit the function
-   return tickToInch(error);
-  }
-
   
 /* Actively halt robot movement for timeOut seconds */
 double Drive::brake(double timeOut)

@@ -116,7 +116,7 @@ void opcontrol() {
      }
      
      //DRIVER CONTROL 
-     arcade_standard(3);
+     arcade_standard(5);
      
      if (controller.get_digital(DIGITAL_L1)){intake.move_voltage(-12000);}
      else if (controller.get_digital(DIGITAL_L2)) {intake.move_voltage(12000);}
@@ -146,8 +146,8 @@ void opcontrol() {
  
      else {
        hang.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-       if (controller.get_digital(DIGITAL_R2)){hang.move_voltage(-12000);}
-       else if (controller.get_digital(DIGITAL_R1)) {hang.move_voltage(12000);}
+       if (controller.get_digital(DIGITAL_R1)){hang.move_voltage(-12000);}
+       else if (controller.get_digital(DIGITAL_R2)) {hang.move_voltage(12000);}
        else {hang.move_velocity(0);}   
      }
 
