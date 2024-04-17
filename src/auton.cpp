@@ -301,88 +301,87 @@ void farRush(){
 
  //get first bar green on auto line
  drive.setScheduleThreshold_l(58);
- drive.addErrorFunc(70, LAMBDA(hang.move_voltage(-12000)));
+ drive.addErrorFunc(71, LAMBDA(frontWings.set_value(false)));
+ drive.addErrorFunc(70, LAMBDA(hang.move_voltage(0)));
  drive.hardStop(forward, 48, 72, 100);
 
  //ensure not to "over take"
  drive.addErrorFunc(40, LAMBDA(intake.move_voltage(0)));
  
  //back up and maintain angle 
- drive.setPID(4);
- drive.swerve(backwardShortest, 58, 346, 2, 100, 95);
+                  /*{kP, kPa, kI, kIa, kD,  kDa*/
+ drive.setCustomPID({15, 18,  0,   0,  25,  30});
+ drive.swerve(backwardShortest, 58, 341, 2, 100, 95);
  
  //xtake auto line ball
  drive.setPID(1);
  drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
- drive.move(right, imuTarget(90), 1, 70);
+ drive.turn(right, imuTarget(90), 1, 70);
  
  //grab triball under elevation bar
- drive.move(left, imuTarget(270), 1, 70);
+                  /*{kP, kPa, kI, kIa, kD, kDa*/
+ drive.setCustomPID({0, 72,  0,  3,  0,   174});
+ drive.setScheduleThreshold_a(NO_SCHEDULING);
+ drive.turn(left, imuTarget(270), 2, 70);
 
  intake.move_voltage(-12000);
-
+ 
+ drive.setScheduleThreshold_l(35);
  drive.hardStop(forward, 25, 60, 100);
 
- /*
+ 
  //hardstop into swerve to push into goal
+ drive.setScheduleThreshold_l(32);
  drive.hardStop(backward, 22, 60, 100);
  
  //goal push swerve 
  drive.setPID(4);
- drive.addErrorFunc(44, LAMBDA(wings.set_value(true)));
+ drive.addErrorFunc(44, LAMBDA(backWings.set_value(true)));
  drive.addErrorFunc(40, LAMBDA(drive.setMaxTurnVelocity(0)));
  drive.addErrorFunc(33, LAMBDA(drive.setMaxTurnVelocity(100)));
  drive.addErrorFunc(33, LAMBDA(drive.setMaxVelocity(59)));
- drive.addErrorFunc(22, LAMBDA(wings.set_value(false)));
+ drive.addErrorFunc(22, LAMBDA(backWings.set_value(false)));
  drive.swerve(backwardLeft, 48, imuTarget(185), 2, 100, 90);
+ 
 
- moveDriveTrain(-12000, 0.5);
+ //drive.moveDriveTrain(-12000, 0.5);
  
  //set up for second push
- drive.setCustomPID(64, 148,  3,   0,  240,  240,   0);
+                 /*{kP, kPa, kI, kIa, kD,  kDa*/
+
+ /*
+ drive.setCustomPID({15, 40,  0,   0, 25,   70});
  drive.swerve(forwardRight, 6, imuTarget(200), 1, 100, 95);
  
  //overturn for push 
- drive.setStandStill(turn, 9, 2);
  drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
 
  drive.setPID(1);
- drive.move(left, 195, 2, 70);
-
- drive.setStandStill(turn, 7, 2);
- 
- intakePis.set_value(false);
+ drive.setScheduleThreshold_a(30);
+ drive.turn(left, 195, 2, 70);
 
  //push
- moveDriveTrain(12000, 0.7);
+ drive.moveDriveTrain(12000, 0.7);
 
  //back up to get safe ball
  drive.setPID(3);
- drive.addErrorFunc(10, LAMBDA(intakePis.set_value(true);));
  drive.swerve(backwardShortest, 16, 0, 2, 100, 95);
  
 
 
  drive.setPID(1);
- drive.move(left, imuTarget(285), 1, 70);
+ drive.turn(left, imuTarget(285), 1, 70);
 
  intake.move_voltage(-12000);
-  */
  
  //hardstop into swerve to score safe ball
-                  /*{kP, kPt,  kI, kIt, kD,  kDt,  kPd}*/
-
- 
-  /*
- drive.setCustomPID(29, 0,    0,  0,   160, 0,  140);
+ drive.setScheduleThreshold_l(39); 
  drive.hardStop(forward, 29, 72, 100);
  
  drive.setPID(4);
  drive.addErrorFunc(38, LAMBDA(drive.setMaxTurnVelocity(100)));
  drive.addErrorFunc(38, LAMBDA(drive.setMaxVelocity(95)));
  drive.addErrorFunc(10, LAMBDA(intake.move_voltage(12000)));
- drive.addErrorFunc(10, LAMBDA(intakePis.set_value(true)));
-
  drive.swerve(forwardRight, 62, imuTarget(90), 2, 100, 95);
  */
  
@@ -390,4 +389,11 @@ void farRush(){
  onErrorVector.clear();
 }
 
-void nothing(){}
+void nothing(){
+ //drive.setScheduleThreshold_a(30);
+                 /*{kP, kPa, kI, kIa, kD, kDa*/
+ drive.setCustomPID({0, 72,  0,  3,  0,   174});
+
+ drive.turn(right, 180, 2, 70);
+ pros::delay(2000);
+}

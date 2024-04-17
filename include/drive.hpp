@@ -75,7 +75,7 @@ struct slewProfile
 
    {18,  205,  0,  0, 52,  800,    0},/*last close swerve FL*/
 
-   {18,  157, 0,  0, 60,   801,    0} /*far quals side elevation swerve / close side long swerve*/
+   {18,  157,  0,  0, 60,   801,    0} /*far quals side elevation swerve / close side long swerve*/
 };
 
 class Drive{
@@ -195,7 +195,7 @@ class Drive{
  //Swerve Movemnet Function                 
  double swerve(Direction dir, double target, double target_a, double timeOut, double maxVel, 
                  double maxVel_a);
-                 
+
  //P Based brake loop
  double brake(double timeOut);
 };
