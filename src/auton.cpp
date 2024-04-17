@@ -308,11 +308,11 @@ void farRush(){
  drive.addErrorFunc(40, LAMBDA(intake.move_voltage(0)));
  
  //back up and maintain angle 
- //drive.setPID(1);
+ drive.setPID(4);
  drive.swerve(backwardShortest, 58, 346, 2, 100, 95);
  
  //xtake auto line ball
- //drive.setPID(1);
+ drive.setPID(1);
  drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
  drive.move(right, imuTarget(90), 1, 70);
  
