@@ -4,7 +4,7 @@
 #include "include.hpp"
 #include "pros/rtos.hpp"
 
-/* Returns 1 if x is positive or zero and -1 if x is negative */
+/* Returns 1 if x is positive or zero or -1 if x is negative */
 int signum(double x)
 {
   return (x >= 0) - (x < 0);
@@ -54,48 +54,4 @@ void findTri(Triangle& obj, double a, double reference_a){
   obj.a = a;
   obj.b =  a * tan(obj.beta);
   obj.hyp = sqrt(a*a + obj.b*obj.b);
-}
-
-
-void Hang::setTarget(int n){
-    targetIndicator = std::clamp(n, 0, LIFTVALSIZE-1);
-    target = liftTargets[targetIndicator];
-}
-
-void Hang::setCustomTarget(float customTarget){
-    target = customTarget;
-}
-
-void Hang::waitUntilTargetReached(float timeOut){
-    const uint32_t endTime = pros::millis() + timeOut*1000;
-    while(pros::millis() < endTime && fabs(error) < 3){
-        pros::delay(10);
-    }
-}
-
-void Hang::PID(){
-    error = target - (360 - (float(hangRot.get_angle())/100));
-    float proportion = error;
-
-    float derivative = error - lastError;
-    lastError = error;
-    if(error == 0){derivative = 0;}
-
-    double finalVolt;
-
-    if(abs(error)>target-10) {
-		 finalVolt = error*12000;
-	  }
-    
-    else {
-     finalVolt = kP*proportion + kI*intergral + kD*derivative;
-    }
-
-    //Set finalVolt to range
-    finalVolt = std::clamp(finalVolt, -12000.0, 12000.0);
-
-    controller.print(2, 0, "Error: %.2f", error);
-
-    //Set final hang speeds
-    hang.move_voltage(finalVolt);
 }

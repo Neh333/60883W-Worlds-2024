@@ -41,44 +41,4 @@ struct Triangle {
 *        Angle to subtract from the current IMU heading. 
 *        Will set hyp equal to A if reference and IMU heading are the same.   
 **/
-
-
 void findTri(Triangle& obj, double a, double reference_a);
-
-
-#define LIFT_LOWEST 0
-#define LIFT_PLATFORM 1
-#define LIFT_OVER_PLATFORM 2
-#define LIFT_HIGHEST 3
-#define LIFT_RINGS_HEIGHT 210
-#define LIFT_RINGS_WITH_MOGO_HEIGHT 225
-#define LIFT_OVER_MOGO_HEIGHT 279
-
-//Global Variable Declaration
-#define LIFTVALSIZE 2                  /*H, V */
-const float liftTargets[LIFTVALSIZE] = {92, 170}; 
-
-class Hang{
- private:
-  //Initialize PID Values
-  const float kP = 30;
-  const float kI = 0;
-  const float kD = 100;
-  const float intergralActive = 2;
-  const float intergralLimit = 40;
-
-  //Variables that need to be read after each PID scope is destroyed
-  float error;
-  float lastError;
-  float intergral;
-    
- public:
-  uint8_t targetIndicator = 0;
-  float target;
-  void PID();
-  void waitUntilTargetReached(float timeOut);
-  void setTarget(int n);
-  void setCustomTarget(float target);
-
-};
-extern Hang hangPID;
