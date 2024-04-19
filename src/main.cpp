@@ -89,9 +89,6 @@ void arcade_standard(double curve) {
  set_tank(fwd_stick + turn_stick, fwd_stick - turn_stick);
 }
 
-
-Hang hangPID;
-
 void opcontrol() {
  while (true) {
      //AUTO SELECTOR

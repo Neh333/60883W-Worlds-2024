@@ -75,7 +75,7 @@ struct slewProfile
 
    {18,  205,  0,  0, 52,  800,    0},/*last close swerve FL*/
 
-   {18,  157,  0,  0, 60,   801,    0} /*far quals side elevation swerve / close side long swerve*/
+   {18,  157,  0,  0, 60,   801,    0}/*far quals side elevation swerve / close side long swerve*/
 };
 
 class Drive{
@@ -110,7 +110,6 @@ class Drive{
  //PID updater methods 
  double updatePID(double KP, double KI, double KD, double error, double lastError, double &integral, 
                  double integralActive);
- double updatePD(double KP, double KD, double error, double lastError);
  void updateIntegral(double error, double lastError, double activeDistance, double& integral);
  void updateStandstill(movement_Type type, bool& standStill, double error, double lastError,
                          uint8_t& standStillCount);
