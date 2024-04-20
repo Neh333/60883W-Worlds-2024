@@ -4,10 +4,8 @@
 #include "drive.hpp"
 #include "util.hpp"
 
-//object instances 
+/*Drive object instance*/
 Drive drive(leftMotors, rightMotors, imu);
-pros::Mutex onErrorMutex;
-std::vector<errorFuncTuple> onErrorVector;
 
 /* AUTON NOTES: 
 *  run turn velo 70 or lower
@@ -15,6 +13,31 @@ std::vector<errorFuncTuple> onErrorVector;
 *  make sure movment has a big enough timeout 
 */
 void close(){
+ backWings.set_value(true);
+  
+ //set scheduling attributes 
+ drive.setScheduledConstants(PIDConstants[2]);
+ drive.setScheduleThreshold_l(10);
+
+ //start running intake and drop it
+ intake.move_voltage(-12000);
+ hang.move_voltage(-12000);
+
+ drive.setPID(2);
+ drive.turn(left, 50, 1, 70); //refuses to work
+ pros::delay(2000);
+ 
+ backWings.set_value(false);
+
+ pros::delay(5000);
+ 
+ drive.setPID(1);
+ drive.move(forward, 34, 3, 100);
+
+
+}
+
+void closeRush(){
  //fling pre load
  frontWings.set_value(true);
 
@@ -59,7 +82,6 @@ void close(){
 
  drive.setPID(1);
  drive.turn(right, imuTarget(125), 1, 70);
-  
 
  //drop down backwings for removal 
  backWings.set_value(true);
@@ -88,7 +110,7 @@ void close(){
   
  //remove on error task and clear the on error vector
  runOnError.remove();
- onErrorVector.clear(); 
+ drive.onErrorVector.clear(); 
 
 }
 
@@ -188,7 +210,7 @@ void far(){
   
  //remove on error task and clear the on error vector
  runOnError.remove();
- onErrorVector.clear();
+ drive.onErrorVector.clear();
 }
 
 void closeElims(){
@@ -221,7 +243,7 @@ void closeElims(){
  frontWings.set_value(true);
   
  //push over
- drive.move(forward, 23, 1, 100);
+ drive.move(forward, 22, 1, 100);
 
  frontWings.set_value(false);
   
@@ -268,12 +290,14 @@ void closeElims(){
  //drop wing down to touch bar
  backWings.set_value(false);
 
+ pros::delay(1000);
+
  //switch to toogle so wings will stay down once cp control runs
  backWingTog = false;
   
  //remove on error task and clear the on error vector
  runOnError.remove();
- onErrorVector.clear();
+ drive.onErrorVector.clear();
 }
 
 void farRush(){
@@ -303,28 +327,25 @@ void farRush(){
  //ensure not to "over take"
  drive.addErrorFunc(40, LAMBDA(intake.move_voltage(-8000)));
  
- 
  //back up and maintain angle 
- drive.setScheduleThreshold_l(10);
- drive.move(backward, 56, 3, 100);
-
                   /*{kP, kPa, kI, kIa,  kD,  kDa*/
-
- //drive.setCustomPID({15, 5,   0,    0,  58,  10});
- //drive.swerve(backwardShortest, 60, 341, 2, 100, 10);
+ drive.setCustomPID({16,  8,   0,    0,  58,  10});
+ drive.swerve(backwardShortest, 58, 341, 2, 100, 10);
  
  
  //xtake auto line ball
+ drive.setPID(1);
  drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
  drive.turn(right, imuTarget(90), 1, 70);
 
  //F 180s ong
- drive.turn(left, imuTarget(180), 1, 70);
+ //drive.turn(left, imuTarget(180), 1, 70);
  drive.turn(left, imuTarget(270), 1, 70);
 
  intake.move_voltage(-12000);
-
- drive.setPID(1);
+ 
+ //get triball 
+ drive.setScheduleThreshold_l(10);
  drive.move(forward, 32, 2, 100);
  
  //hardstop into swerve to push into goal
@@ -336,8 +357,8 @@ void farRush(){
  drive.addErrorFunc(44, LAMBDA(backWings.set_value(true)));
  drive.addErrorFunc(40, LAMBDA(drive.setMaxTurnVelocity(0)));
  drive.addErrorFunc(33, LAMBDA(drive.setMaxTurnVelocity(100)));
- drive.addErrorFunc(33, LAMBDA(drive.setMaxVelocity(70)));
- drive.addErrorFunc(22, LAMBDA(backWings.set_value(false)));
+ drive.addErrorFunc(33, LAMBDA(drive.setMaxVelocity(80)));
+ drive.addErrorFunc(20, LAMBDA(backWings.set_value(false)));
  drive.swerve(backwardLeft, 48, imuTarget(185), 2, 100, 90);
  
  //ram
@@ -350,14 +371,11 @@ void farRush(){
  drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
 
  drive.setPID(1);
- drive.setScheduleThreshold_a(30);
  drive.turn(left, 195, 2, 70);
 
  //push
  drive.moveDriveTrain(12000, 0.7);
 
-
- /*
  //back up to get safe ball
  drive.setPID(3);
  drive.swerve(backwardShortest, 16, 0, 2, 100, 95);
@@ -374,12 +392,17 @@ void farRush(){
  drive.setPID(4);
  drive.addErrorFunc(38, LAMBDA(drive.setMaxTurnVelocity(100)));
  drive.addErrorFunc(38, LAMBDA(drive.setMaxVelocity(95)));
- drive.addErrorFunc(10, LAMBDA(intake.move_voltage(12000)));
- drive.swerve(forwardRight, 62, imuTarget(90), 2, 100, 95);
- */
+ drive.addErrorFunc(29, LAMBDA(frontWings.set_value(true)));
+ drive.addErrorFunc(20, LAMBDA(intake.move_voltage(12000)));
+
+ drive.swerve(forwardRight, 58, imuTarget(90), 2, 100, 90);
+
+ drive.moveDriveTrain(12000, 0.3);
+
+ drive.moveDriveTrain(-12000, 0.1);
  
  runOnError.remove();
- onErrorVector.clear();
+ drive.onErrorVector.clear();
 }
 
 void nothing(){}

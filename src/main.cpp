@@ -7,17 +7,18 @@
 #include "lvgl_funcs.hpp"
 
 
-#define AUTO_NUMBER 5
+#define AUTO_NUMBER 6
 uint8_t auton = AUTO_NUMBER; 
 
 
 #define AUTO_SWITCH(){ \
 	switch(auton%AUTO_NUMBER){\
-		case 0:  controller.print(2, 0, "Close  %.2f                       ",imu.get_heading()); break;\
-		case 1:  controller.print(2, 0, "Far %.2f                          ",imu.get_heading()); break;\
-		case 2:  controller.print(2, 0, "Close Elims %.2f                  ",imu.get_heading()); break;\
-		case 3:  controller.print(2, 0, "Far Rush %.2f                     ",imu.get_heading()); break;\
-		case 4:  controller.print(2, 0, "Nothing %.2f                      ",imu.get_heading()); break;\
+    case 0:  controller.print(2, 0, "Close Safe  %.2f                      ",imu.get_heading()); break;\
+		case 1:  controller.print(2, 0, "Close Rush Qual %.2f                  ",imu.get_heading()); break;\
+		case 2:  controller.print(2, 0, "Far %.2f                              ",imu.get_heading()); break;\
+		case 3:  controller.print(2, 0, "Close Rush Elim %.2f                  ",imu.get_heading()); break;\
+		case 4:  controller.print(2, 0, "Far Rush %.2f                         ",imu.get_heading()); break;\
+		case 5:  controller.print(2, 0, "Nothing %.2f                          ",imu.get_heading()); break;\
 	}\
 }
 
@@ -57,11 +58,12 @@ void competition_initialize(){
 
 void autonomous(){
  switch(auton%AUTO_NUMBER){
-		case 0:  close();	      break;
-		case 1:  far();           break;
-		case 2:  closeElims();    break;
-		case 3:  farRush();       break;
-		case 4:  nothing();       break;
+    case 0:  close();         break;
+		case 1:  closeRush();	     break;
+		case 2:  far();           break;
+		case 3:  closeElims();    break;
+		case 4:  farRush();       break;
+		case 5:  nothing();       break;
     }
 }
 

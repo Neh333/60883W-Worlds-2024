@@ -1,5 +1,9 @@
 #pragma once
+
+
 void close();
+
+void closeRush();
 void far();
 
 void farRush();

@@ -2,7 +2,6 @@
 #include "main.h"
 #include "util.hpp"
 
-
 #define INTEGRAL_MAX 28.0
 #define NO_SCHEDULING -1.f
 
@@ -32,7 +31,8 @@ struct errorFuncTuple
   double onError;
   bool called;
 
-  errorFuncTuple(std::function<void()> func, double onError, bool called): func(func), onError(onError), called(called){}
+  errorFuncTuple(std::function<void()> func, double onError, bool called) : 
+   func(func), onError(onError), called(called){}
 };
 
 void onError_fn(void* param);
@@ -148,7 +148,7 @@ class Drive{
    this->imu           = &imu;
   }
 
- //"Virtual" Drivetrain attributes and methods 
+ /*"Virtual" Drivetrain attributes and methods*/ 
  pros::MotorGroup *rightMotors;
  pros::MotorGroup *leftMotors;
  pros::Imu        *imu;
@@ -161,7 +161,7 @@ class Drive{
 
  void moveDriveTrain(int voltage, float time);
 
- //setters
+ /*setters*/
  void setMaxVelocity(float velocity);
  void setMaxTurnVelocity(float velocity);
  void setCustomPID(PIDprofile profile);
@@ -175,7 +175,7 @@ class Drive{
  void setStandStill(movement_Type type, uint8_t maxCycles, float largestStep);
  void setPID(uint8_t n);
   
- // Getters
+ /*Getters*/
  const double getError();
  const bool getPIDStatus();
 
@@ -199,5 +199,6 @@ class Drive{
  double brake(double timeOut);
 };
 
+//Drive object instance declartion defined in auton and can be used anywhere 
 extern Drive drive;
 
