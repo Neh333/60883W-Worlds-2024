@@ -2,7 +2,7 @@
 #include "main.h"
 #include "util.hpp"
 
-#define INTEGRAL_MAX 28.0
+#define INTEGRAL_MAX 10000.0
 #define NO_SCHEDULING -1.f
 
 enum Direction{
@@ -58,24 +58,26 @@ struct slewProfile
 // Initialize PID Values
 //indexs 0-5
 //set PID uses 1-6
- const PIDprofile PIDConstants[6] = {
+const PIDprofile PIDConstants[7] = {
  /*{kP, kPa, kI, kIa, kD,  kDa,  kPd}*/
-   {17, 193,  0,   0,  0,   22,    0},/*init prfoile of 70+ degree turns / lateral 10 - 50*/
+  {17, 190,  0,   0,  0,   10,    0},/*init prfoile of 60+ degree turns / lateral 10 - 50*/
 
-   {24, 189,  0,   0, 39,  637,    0},/*40+ degree turns / 2+ inch lateral*/
+  {24, 195,  0,   5, 39,  690,    0},/*35+ degree turns / 2+ inch lateral*/ 
 
-   /***********Scheduled**************/
+  {0,  120,  0,   10,  0,  500,    0},/*165+ degree turns (NO SCHEDULING)*/
 
-   {20, 134,  0,   3, 70,  500,    0},/*scheduled prfoile of 70+ degree turns starting at 30 degrees of error
-    scheduled lat profile starting at 10 inches of error**/
+  /***********Scheduled**************/
    
-   /***********SWERVES**************/
+  {20, 148,  0,  7, 70,   590,    0},/*scheduled prof of index[0] starting at 15 deg and 10 in of error*/
+   
+ 
+  /***********SWERVES**************/
 
-   {17,  190,  0,  0, 50,   20,    0},/*first far swerve*/
+  {17,  190,  0,  0, 50,   20,    0},/*first far swerve*/
 
-   {18,  205,  0,  0, 52,  800,    0},/*last close swerve FL*/
+  {18,  205,  0,  0, 52,  800,    0},/*last close swerve FL*/
 
-   {18,  157,  0,  0, 60,   801,    0}/*far quals side elevation swerve / close side long swerve*/
+  {18,  157,  0,  0, 60,   801,    0}/*far quals side elevation swerve / close side long swerve*/
 };
 
 class Drive{
@@ -89,7 +91,7 @@ class Drive{
  double error;
   
  const double integralActive = inchToTick(3);
- const int integralActive_a = 3;
+ const int integralActive_a = 15;
 
  double maxVolt;
  double maxVolt_a;

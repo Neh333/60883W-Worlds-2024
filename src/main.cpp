@@ -2,14 +2,11 @@
 #include "drive.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
-#include "util.hpp"
 #include "include.hpp"
 #include "lvgl_funcs.hpp"
 
-
 #define AUTO_NUMBER 6
 uint8_t auton = AUTO_NUMBER; 
-
 
 #define AUTO_SWITCH(){ \
 	switch(auton%AUTO_NUMBER){\
@@ -68,8 +65,8 @@ void autonomous(){
 }
 
 void set_tank(int l_stick, int r_stick) {
-    leftMotors.move_voltage(l_stick * (12000.0 / 127.0));
-    rightMotors.move_voltage(r_stick * (12000.0 / 127.0));
+  leftMotors.move_voltage(l_stick * (12000.0 / 127.0));
+  rightMotors.move_voltage(r_stick * (12000.0 / 127.0));
 }
 
 double left_curve_function(double x, double left_curve_scale) {

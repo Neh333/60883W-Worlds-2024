@@ -315,7 +315,7 @@ double Drive::turn(Direction dir, double target, double timeOut, double maxVeloc
     finalVolt = std::clamp(finalVolt, -maxVolt_a, maxVolt_a);
 
     // Print statement used for testing
-    controller.print(2, 0, "Error: %.2f", error);
+    controller.print(2, 0, "Error:     %.2f", error);
 
     /* Calculate standstill */
     updateStandstill(lateral, standStill, error, lastError, standStillCount);

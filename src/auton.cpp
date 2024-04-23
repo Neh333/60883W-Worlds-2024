@@ -1,5 +1,6 @@
 #include "auton.hpp"
 #include "include.hpp"
+#include "pros/imu.hpp"
 #include "pros/rtos.hpp"
 #include "drive.hpp"
 #include "util.hpp"
@@ -12,28 +13,40 @@ Drive drive(leftMotors, rightMotors, imu);
 *  run gen lat 100
 *  make sure movment has a big enough timeout 
 */
-void close(){
- backWings.set_value(true);
+void close(){    
   
  //set scheduling attributes 
- drive.setScheduledConstants(PIDConstants[2]);
+ drive.setScheduledConstants(PIDConstants[3]);
  drive.setScheduleThreshold_l(10);
 
  //start running intake and drop it
- intake.move_voltage(-12000);
+ intake.move_voltage(12000);
  hang.move_voltage(-12000);
-
- drive.setPID(2);
- drive.turn(left, 50, 1, 70); //refuses to work
- pros::delay(2000);
  
+ pros::delay(100);
+
+ hang.move_voltage(0);
+
+ drive.move(forward, 12, 1, 100);
+ 
+ backWings.set_value(true);
+ 
+ drive.setPID(2);
+ drive.setScheduleThreshold_l(NO_SCHEDULING);
+ drive.move(backward, 8, 1, 100);
+
  backWings.set_value(false);
 
- pros::delay(5000);
+ pros::delay(500);
  
- drive.setPID(1);
- drive.move(forward, 34, 3, 100);
+ drive.setPID(3);
+ drive.turn(right, imuTarget(98), 2, 100);
 
+ pros::delay(6000);
+
+ drive.setPID(1);
+ drive.setScheduleThreshold_l(10);
+ drive.move(forward, 41, 3, 100);
 
 }
 
@@ -45,7 +58,7 @@ void closeRush(){
  pros::Task runOnError(onError_fn);
   
  //set scheduling attributes 
- drive.setScheduledConstants(PIDConstants[2]);
+ drive.setScheduledConstants(PIDConstants[3]);
  drive.setScheduleThreshold_a(30);
  drive.setScheduleThreshold_l(10);
 
@@ -77,7 +90,7 @@ void closeRush(){
  drive.move(backward, 4, 1, 100);
 
  //go to match laod bar
- drive.setPID(6);
+ drive.setPID(7);
  drive.swerve(backwardLeft, 57, imuTarget(27), 3,  60, 70);
 
  drive.setPID(1);
@@ -97,7 +110,7 @@ void closeRush(){
  backWings.set_value(false);
    
  //score pre load
- drive.setPID(4);
+ drive.setPID(6);
  drive.addErrorFunc(26, LAMBDA(drive.setMaxVelocity(90)));
  drive.addErrorFunc(26, LAMBDA(drive.setMaxTurnVelocity(70)));
  drive.swerve(backwardRight, 28, imuTarget(180), 2, 65, 90);
@@ -105,7 +118,6 @@ void closeRush(){
  //go touch match load bar and push over 
  intake.move_voltage(12000);
   
- drive.setPID(5);
  drive.swerve(forwardLeft, 69, imuTarget(90), 5,  90, 65);
   
  //remove on error task and clear the on error vector
@@ -122,7 +134,7 @@ void far(){
  pros::Task runOnError(onError_fn);
   
  //set scheduling attributes 
- drive.setScheduledConstants(PIDConstants[2]);
+ drive.setScheduledConstants(PIDConstants[3]);
  drive.setScheduleThreshold_a(30);
  drive.setScheduleThreshold_l(10);
 
@@ -133,7 +145,7 @@ void far(){
  //let wing extend 
  pros::delay(80);
   
- drive.setPID(4); 
+ drive.setPID(6); 
  drive.addErrorFunc(30, LAMBDA(hang.move_voltage(0)));
  drive.addErrorFunc(24, LAMBDA(backWings.set_value(false)));
  //drive.addErrorFunc(22, LAMBDA(drive.setMaxTurnVelocity(80)));
@@ -143,18 +155,18 @@ void far(){
  drive.moveDriveTrain(-12000, 0.3);
   
  //get ball under elavation bar  
- drive.setPID(6);
+ drive.setPID(7);
  drive.addErrorFunc(50, LAMBDA(drive.setMaxVelocity(65)));
  drive.addErrorFunc(50, LAMBDA(drive.setMaxTurnVelocity(70)));
- drive.swerve(forwardRight, 70, imuTarget(91), 3, 70, 50);
+ drive.swerve(forwardRight, 73, imuTarget(92), 3, 70, 48);
   
  //go get safe ball
  drive.setPID(1);
  drive.addErrorFunc(23, LAMBDA(intake.move_voltage(-8000)));
- drive.move(backward, 26, 1, 100);
+ drive.move(backward, 27, 2, 100);
   
  //x-take triball
- drive.addErrorFunc(2, LAMBDA(intake.move_voltage(7000)));
+ drive.addErrorFunc(2, LAMBDA(intake.move_voltage(6000)));
  drive.turn(right, imuTarget(180), 1, 70);
   
  //get safeball
@@ -191,16 +203,16 @@ void far(){
  drive.turn(left, imuTarget(131), 1, 70);
 
  //get auton ball on bar
- drive.move(forward, 20, 1, 100);
+ drive.move(forward, 18, 1, 100);
 
  //turn to corral for the score & open front wings 
  drive.addErrorFunc(2, LAMBDA(frontWings.set_value(true)));
- drive.addErrorFunc(1, LAMBDA(intake.move_voltage(10000)));
- drive.turn(right, imuTarget(260), 1, 70);
+ drive.addErrorFunc(1, LAMBDA(intake.move_voltage(8000)));
+ drive.turn(right, imuTarget(265), 1, 70);
   
  //score all 4 triballs 
- drive.setPID(4);
- drive.swerve(forwardRight, 32, imuTarget(275), 2, 100, 95);
+ drive.setPID(6);
+ drive.swerve(forwardRight, 32, imuTarget(275), 2, 95, 100);
  drive.moveDriveTrain(12000, 0.3);
 
  pros::delay(80);
@@ -221,9 +233,9 @@ void closeElims(){
  pros::Task runOnError(onError_fn);
   
  //set scheduling attributes 
- drive.setScheduledConstants(PIDConstants[2]);
+ drive.setScheduledConstants(PIDConstants[3]);
  drive.setScheduleThreshold_a(30);
- drive.setScheduleThreshold_l(10);
+ drive.setScheduleThreshold_l(15);
 
  //start running intake and drop it
  intake.move_voltage(-12000);
@@ -253,7 +265,7 @@ void closeElims(){
  drive.move(backward, 4, 1, 100);
 
  //go to match laod bar
- drive.setPID(6);
+ drive.setPID(7);
  drive.swerve(backwardLeft, 57, imuTarget(27), 3,  60, 70);
 
  drive.setPID(1);
@@ -273,7 +285,7 @@ void closeElims(){
  backWings.set_value(false);
    
  //score pre load
- drive.setPID(4);
+ drive.setPID(6);
  drive.addErrorFunc(26, LAMBDA(drive.setMaxVelocity(90)));
  drive.addErrorFunc(26, LAMBDA(drive.setMaxTurnVelocity(70)));
  drive.swerve(backwardRight, 28, imuTarget(180), 2, 65, 90);
@@ -281,7 +293,6 @@ void closeElims(){
  //go touch match load bar and push over 
  intake.move_voltage(12000);
   
- drive.setPID(5);
  drive.swerve(forwardLeft, 69, imuTarget(90), 5,  90, 65);
   
  //go back to touch bar
@@ -308,8 +319,8 @@ void farRush(){
  pros::Task runOnError (onError_fn);
 
  //set scheduling attributes 
- drive.setScheduledConstants(PIDConstants[2]);
- drive.setScheduleThreshold_a(30);
+ drive.setScheduledConstants(PIDConstants[3]);
+ drive.setScheduleThreshold_a(15);
 
  //start running intake and drop it
  intake.move_voltage(-12000);
@@ -330,19 +341,20 @@ void farRush(){
  //back up and maintain angle 
                   /*{kP, kPa, kI, kIa,  kD,  kDa*/
  drive.setCustomPID({16,  8,   0,    0,  58,  10});
- drive.swerve(backwardShortest, 58, 341, 2, 100, 10);
- 
+ drive.swerve(backwardLeft, 56, imuTarget(341), 2, 100, 10);
+
+ //drive.setScheduleThreshold_l(10);
+ //drive.move(backward, 54, 3, 100);
  
  //xtake auto line ball
- drive.setPID(1);
- drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
+ drive.addErrorFunc(4, LAMBDA(intake.move_voltage(12000)));
  drive.turn(right, imuTarget(90), 1, 70);
 
  //F 180s ong
- //drive.turn(left, imuTarget(180), 1, 70);
- drive.turn(left, imuTarget(270), 1, 70);
-
  intake.move_voltage(-12000);
+ drive.setPID(3);
+ drive.setScheduleThreshold_a(NO_SCHEDULING);
+ drive.turn(right, imuTarget(265), 1, 70);
  
  //get triball 
  drive.setScheduleThreshold_l(10);
@@ -350,16 +362,16 @@ void farRush(){
  
  //hardstop into swerve to push into goal
  drive.setScheduleThreshold_l(36);
- drive.hardStop(backward, 22, 72, 100);
+ drive.hardStop(backward, 24, 72, 100);
  
  //goal push swerve 
- drive.setPID(4);
+ drive.setPID(6);
  drive.addErrorFunc(44, LAMBDA(backWings.set_value(true)));
- drive.addErrorFunc(40, LAMBDA(drive.setMaxTurnVelocity(0)));
- drive.addErrorFunc(33, LAMBDA(drive.setMaxTurnVelocity(100)));
- drive.addErrorFunc(33, LAMBDA(drive.setMaxVelocity(80)));
- drive.addErrorFunc(20, LAMBDA(backWings.set_value(false)));
- drive.swerve(backwardLeft, 48, imuTarget(185), 2, 100, 90);
+ drive.addErrorFunc(42, LAMBDA(drive.setMaxTurnVelocity(0)));
+ drive.addErrorFunc(33, LAMBDA(drive.setMaxTurnVelocity(90)));
+ drive.addErrorFunc(33, LAMBDA(drive.setMaxVelocity(85)));
+ drive.addErrorFunc(18, LAMBDA(backWings.set_value(false)));
+ drive.swerve(backwardLeft, 48, imuTarget(185), 2, 90, 80);
  
  //ram
  drive.moveDriveTrain(-12000, 0.5);
@@ -370,17 +382,18 @@ void farRush(){
  //overturn for push 
  drive.addErrorFunc(3, LAMBDA(intake.move_voltage(12000)));
 
- drive.setPID(1);
+ drive.setPID(3);
  drive.turn(left, 195, 2, 70);
 
  //push
  drive.moveDriveTrain(12000, 0.7);
 
  //back up to get safe ball
- drive.setPID(3);
+ drive.setPID(4);
  drive.swerve(backwardShortest, 16, 0, 2, 100, 95);
 
- drive.setPID(1);
+ drive.setPID(1);//check 
+ drive.setScheduleThreshold_a(15);
  drive.turn(left, imuTarget(285), 1, 70);
 
  intake.move_voltage(-12000);
@@ -389,15 +402,15 @@ void farRush(){
  drive.setScheduleThreshold_l(39); 
  drive.hardStop(forward, 29, 72, 100);
  
- drive.setPID(4);
+ drive.setPID(6);
  drive.addErrorFunc(38, LAMBDA(drive.setMaxTurnVelocity(100)));
  drive.addErrorFunc(38, LAMBDA(drive.setMaxVelocity(95)));
  drive.addErrorFunc(29, LAMBDA(frontWings.set_value(true)));
- drive.addErrorFunc(20, LAMBDA(intake.move_voltage(12000)));
+ drive.addErrorFunc(24, LAMBDA(intake.move_voltage(12000)));
 
  drive.swerve(forwardRight, 58, imuTarget(90), 2, 100, 90);
 
- drive.moveDriveTrain(12000, 0.3);
+ drive.moveDriveTrain(12000, 0.6);
 
  drive.moveDriveTrain(-12000, 0.1);
  
